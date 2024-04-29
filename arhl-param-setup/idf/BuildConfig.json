@@ -1,0 +1,37 @@
+{
+	"IngredientName":"ARLH_WIN_IFWI",
+    "Description":"ARLH WIN IFWI Project",
+    "OutputConfiguration":"idf/PackageGen.json",
+    "SchemaVersion":"1.0",
+    "OutputRoot":"OWRBin",
+	"OutputDir":"OWRBuild",
+    "PackageRoot":"OWRPackage",
+    "PackageMetadataTemplate":"idf/PackageMetadataTemplate.json",
+    "SubComponents":[
+	{
+            "Name":"ARLHWinIfwiDwnldApp",
+            "Description":"ARLH Win Ifwi App download",
+            "ProjectFile":"dwnld.py",
+            "AdditionalFlags": "",
+            "WorkingDirectory": "idf",
+            "ProjectType":"Script"
+        },
+	{
+            "Name":"ARLHWinIfwiBuildApp",
+            "Description":"ARLH Win Ifwi App build",
+            "ProjectFile":"build.bat",
+            "AdditionalFlags": "",
+            "WorkingDirectory": "idf",
+            "ProjectType":"Script"
+        },
+    {
+            "Name":"ARLHWinIfwiBuildOdmApp",
+            "Description":"ARLH Win Ifwi App odm",
+            "ProjectFile":"build_odm.bat",
+            "AdditionalFlags": "",
+            "WorkingDirectory": "idf",
+            "ProjectType":"Script"
+        }		
+    ],    
+    "SchemaVersion": "1.0"
+}
