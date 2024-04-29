@@ -79,7 +79,7 @@ pipeline {
             }
             steps {  
                 checkout([$class: 'GitSCM',
-                userRemoteConfigs: [[credentialsId: 'GitHub-Token', url: 'https://github.com/intel-innersource/libraries.devops.jenkins.cac.git']],
+                userRemoteConfigs: [[credentialsId: 'GitHub-Token', url: 'https://github.com/Kalla-Udaykumar/jenkins-script.setup.git']],
                 branches: [[name: 'master']],
                 extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'abi/henosis'],
                 [$class: 'ScmName', name: 'henosis'],
@@ -108,8 +108,9 @@ pipeline {
             }
             steps {
                 script {
-                    bat """ xcopy /E /I ${WORKSPACE}\\abi\\henosis\\cac\\arl-h\\win\\ifwi\\idf ${WORKSPACE}\\abi\\idf """
+                    bat """ xcopy /E /I ${WORKSPACE}\\abi\\henosis\\arhl-param-setup\\idf ${WORKSPACE}\\abi\\idf """
                     //bat """ mkdir ${WORKSPACE}\\abi\\OWRBin """
+		    // \\arhl-param-setup\\idf
                     PrepareWS()
                 } 
             }
@@ -202,7 +203,7 @@ pipeline {
                 }
             }
         }
-        stage("Artifacts-Deploy") {
+        /*stage("Artifacts-Deploy") {
             agent {
                 docker {
                     image "${DOCKER}"
@@ -215,9 +216,9 @@ pipeline {
                     abi_artifact_deploy custom_file: "${WORKSPACE}/abi/reports/", custom_deploy_path: "hpse-adl-png-local/bios-adl/${JOB_BASE_NAME}/${env.DATETIME}-${BUILD_NUMBER}/reports/", custom_artifactory_url: "https://af01p-png.devtools.intel.com", additional_props: "retention.days=365", cred_id: 'BuildAutomation'
                 }
             }
-        }
+        }*/
     }
-    post {
+    /*post {
         success {
             script {
                  echo "JOB STATUS - SUCCESS"
@@ -240,7 +241,7 @@ pipeline {
         failure {
             echo "JOB STATUS - FAILURE"
         }
-    }
+    }*/
 }
 
 // Prepare the workspace for the ingredient
