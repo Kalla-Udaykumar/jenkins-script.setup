@@ -167,7 +167,7 @@ pipeline {
                             set BIOS_VERSION=%%i )
                         set BIOS_VERSION=%BIOS_VERSION: =%
 
-                        copy \\\\amr.corp.intel.com\\ec\\proj\\IOTG\\Releases\\BIOS\\MeteorLake\\ARL-H\\${params.BIOS_VERSION}\\ROM\\**.rom ${WORKING_DIR}\\IFWI_Automation\\ARL\\ARL_H\\INPUT\\IOTG_BIOS\\
+                        copy \\\\amr.corp.intel.com\\ec\\proj\\IOTG\\Releases\\BIOS\\MeteorLake\\ARL-H\\${params.BIOS_VERSION}\\ROM\\*.rom ${WORKING_DIR}\\IFWI_Automation\\ARL\\ARL_H\\INPUT\\IOTG_BIOS\\
 
                         copy \\\\amr.corp.intel.com\\ec\\proj\\IOTG\\Releases\\BIOS\\MeteorLake\\ARL-H\\${params.BIOS_VERSION}\\BIOS_Manifest.json ${WORKSPACE}\\abi\\
                         """
