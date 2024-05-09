@@ -57,8 +57,8 @@ pipeline {
     parameters {
         booleanParam(name: 'CLEAN', defaultValue: true, description: 'Clean workspace')
         booleanParam(name: 'EMAIL', defaultValue: true, description: 'Email notification upon job completion')
-        string(name: 'BIOS_VERSION', description: 'bios versin')
-        string(name: 'IFWI_VERSION', description: 'ifwi versin')
+       // string(name: 'BIOS_VERSION', description: 'bios versin')
+        //string(name: 'IFWI_VERSION', description: 'ifwi versin')
     }
     stages {
         stage ('CLEAN') {
@@ -124,7 +124,7 @@ pipeline {
                     def artFiles  = """ {
                         "files": [
                             {
-                                "pattern": "hspe-iotgfw-adl-png-local/ARL-H/Payload-Details/*/ARL_H_Payload_Versions.json",
+                                "pattern": "hspe-iotgfw-adl-png-local/ARL-H/Engineering/2024/Internal/ARL_H_WW12.3.020649/Payload-Details/ARL_H_Payload_Versions.json",
                                 "target": "download/",
                                 "flat": "true",
                                 "recursive": "true",
@@ -162,14 +162,14 @@ pipeline {
                     create_directories()
                     dir("${WORKING_DIR}\\IFWI_Automation\\Builder"){
                         bat """   
-                        dir \\\\amr.corp.intel.com\\ec\\proj\\IOTG\\Releases\\BIOS\\MeteorLake\\ARL-H | grep _ | awk "{print \$5}" | grep -v [a-z] | grep -v [A-Z] | tail -1 > bios_version.txt
+                         dir \\\\amr.corp.intel.com\\ec\\proj\\IOTG\\Releases\\BIOS\\MeteorLake\\ARL-H | grep _ | awk "{print \$5}" | grep -v [a-z] | grep -v [A-Z] | tail -1 > bios_version.txt
                         FOR /F %%i IN (bios_version.txt) DO (
                             set BIOS_VERSION=%%i )
                         set BIOS_VERSION=%BIOS_VERSION: =%
 
-                        copy \\\\amr.corp.intel.com\\ec\\proj\\IOTG\\Releases\\BIOS\\MeteorLake\\ARL-H\\${params.BIOS_VERSION}\\ROM\\*.rom ${WORKING_DIR}\\IFWI_Automation\\ARL\\ARL_H\\INPUT\\IOTG_BIOS\\
+                        copy \\\\amr.corp.intel.com\\ec\\proj\\IOTG\\Releases\\BIOS\\MeteorLake\\ARL-H\\%BIOS_VERSION%\\ROM\\*.rom ${WORKING_DIR}\\IFWI_Automation\\ARL\\ARL_H\\INPUT\\IOTG_BIOS\\
 
-                        copy \\\\amr.corp.intel.com\\ec\\proj\\IOTG\\Releases\\BIOS\\MeteorLake\\ARL-H\\${params.BIOS_VERSION}\\BIOS_Manifest.json ${WORKSPACE}\\abi\\
+                        copy \\\\amr.corp.intel.com\\ec\\proj\\IOTG\\Releases\\BIOS\\MeteorLake\\ARL-H\\%BIOS_VERSION%\\BIOS_Manifest.json ${WORKSPACE}\\abi\\
                         """
                     }
                 }
@@ -205,7 +205,7 @@ pipeline {
                 }
             }
         }
-        /*stage("Artifacts-Deploy") {
+        stage("Artifacts-Deploy") {
             agent {
                 docker {
                     image "${DOCKER}"
@@ -218,7 +218,7 @@ pipeline {
                     abi_artifact_deploy custom_file: "${WORKSPACE}/abi/reports/", custom_deploy_path: "hpse-adl-png-local/bios-adl/${JOB_BASE_NAME}/${env.DATETIME}-${BUILD_NUMBER}/reports/", custom_artifactory_url: "https://af01p-png.devtools.intel.com", additional_props: "retention.days=365", cred_id: 'BuildAutomation'
                 }
             }
-        }*/
+        }
     }
     /*post {
         success {
