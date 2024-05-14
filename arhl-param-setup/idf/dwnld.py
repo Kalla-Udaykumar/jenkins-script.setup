@@ -31,7 +31,8 @@ for link in links:
 # bios_version 
 with open(WORKING_DIR + "\\IFWI_Automation\\Builder\\bios_version.txt", "r") as f:
     for line in f:
-        BIOS_VERSION = line
+#        BIOS_VERSION = line
+        BIOS_VERSION = 4134_42
 
 # Save IFWI_VERSION to a file in the Jenkins workspace
 ifwi_version_file_path = os.path.join(reports_dir, "ifwi_version.txt")
@@ -41,7 +42,8 @@ with open(ifwi_version_file_path, "w") as f:
 # Save BIOS_VERSION to a file in the Jenkins workspace
 bios_version_file_path = os.path.join(reports_dir, "bios_version.txt")
 with open(bios_version_file_path, "w") as f:
-    f.write(BIOS_VERSION)
+#    f.write(BIOS_VERSION)
+     f.write(4134_42)
 
 print("BIOS_VERSION is :", BIOS_VERSION)
 print("IFWI_VERSION is :" + IFWI_VERSION)
