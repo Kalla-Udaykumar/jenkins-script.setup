@@ -47,7 +47,7 @@ print("BIOS_VERSION is :", BIOS_VERSION)
 print("IFWI_VERSION is :" + IFWI_VERSION)
 print("py ARL_IFWI_download.py ARL_H " + IFWI_VERSION + " Pre_Production")
 
-os.chdir(WORKING_DIR + "\\IFWI_Automation\\ARL\\test\\")
-dwnld_return_value = os.system("py ARL_IFWI_download.py ARL_H " + IFWI_VERSION + " Pre_Production")
-if dwnld_return_value != 0:
-        sys.exit(-1)
+# os.chdir(WORKING_DIR + "\\IFWI_Automation\\ARL\\test\\")
+# dwnld_return_value = os.system("py ARL_IFWI_download.py ARL_H " + IFWI_VERSION + " Pre_Production")
+# if dwnld_return_value != 0:
+ #       sys.exit(-1)
