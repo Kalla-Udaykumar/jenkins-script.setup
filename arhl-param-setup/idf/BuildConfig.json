@@ -2,7 +2,6 @@
 	"IngredientName":"ARLH_WIN_IFWI",
     "Description":"ARLH WIN IFWI Project",
     "OutputConfiguration":"idf/PackageGen.json",
-    "SchemaVersion":"1.0",
     "OutputRoot":"OWRBin",
 	"OutputDir":"OWRBuild",
     "PackageRoot":"OWRPackage",
