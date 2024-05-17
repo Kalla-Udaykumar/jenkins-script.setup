@@ -124,7 +124,7 @@ pipeline {
                     def artFiles  = """ {
                         "files": [
                             {
-                                "pattern": "hspe-iotgfw-adl-png-local/ARL-H/Engineering/2024/Internal/ARL_H_WW12.3.020649/Payload-Details/ARL_H_Payload_Versions.json",
+                                "pattern": "hspe-iotgfw-adl-png-local/ARL-H/Engineering/2024/Internal/ARL_H_*/Payload-Details/ARL_H_Payload_Versions.json",
                                 "target": "download/",
                                 "flat": "true",
                                 "recursive": "true",
