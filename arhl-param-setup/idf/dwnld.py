@@ -24,7 +24,7 @@ soup = BeautifulSoup(r.text, 'html.parser')
 links = soup.find_all("a")
 # ifwi_version
 for link in links:
-        if ("ifwi_arl_hu_a0_pp_release_2024"" in str(link)) and ("_win" not in str(link)):
+        if ("ifwi_arl_hu_a0_pp_release_2024" in str(link)) and ("_win" not in str(link)):
                       #print(link.get('href'))
                       IFWI_VERSION = link.get('href')[0:-1]
 
