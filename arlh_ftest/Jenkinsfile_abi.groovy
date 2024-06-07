@@ -1,5 +1,5 @@
 #!groovy
-@Library('abi') _
+@Library('abi@2.4.0') _
 import java.text.SimpleDateFormat
 import owm.common.BuildInfo
 Map buildinfo = BuildInfo.instance.data
