@@ -26,12 +26,14 @@ links = soup.find_all("a")
 for link in links:
         if ("ifwi_arl_hu_a0_pp_release_2024" in str(link)) and ("_win" not in str(link)):
                       #print(link.get('href'))
-                      IFWI_VERSION = link.get('href')[0:-1]
+                      IFWI_VERSION = 'ifwi_arl_hu_a0_pp_release_2024ww21.5.01'
+                      #IFWI_VERSION = link.get('href')[0:-1]
 
 # bios_version 
 with open(WORKING_DIR + "\\IFWI_Automation\\Builder\\bios_version.txt", "r") as f:
     for line in f:
-        BIOS_VERSION = line
+        BIOS_VERSION = '4134_42'
+        #BIOS_VERSION = line
 
 # Save IFWI_VERSION to a file in the Jenkins workspace
 ifwi_version_file_path = os.path.join(reports_dir, "ifwi_version.txt")
