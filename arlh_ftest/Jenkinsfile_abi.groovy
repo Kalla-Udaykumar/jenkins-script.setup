@@ -8,7 +8,7 @@ Map buildinfo = BuildInfo.instance.data
   * ARLH WIN IFWI Project
   *
 **/
-email_receipients = "vamsi.mutra@intel.com,abdul.r.nalband@intel.com,nithyaraj.j@intel.com,suraj.rajput@intel.com"
+email_receipients = "vamsi.mutra@intel.com,udaykumarx.kalla@intel.com,suraj.rajput@intel.com"
 subject = '$DEFAULT_SUBJECT'
 body = '${SCRIPT, template="managed:abi.html"}'
 
@@ -79,7 +79,7 @@ pipeline {
             }
             steps {  
                 checkout([$class: 'GitSCM',
-                userRemoteConfigs: [[credentialsId: 'GitHub-Token', url: 'https://github.com/intel-innersource/libraries.devops.jenkins.cac.git']],
+                userRemoteConfigs: [[credentialsId: 'GitHub-Token', url: 'https://github.com/Kalla-Udaykumar/jenkins-script.setup.git']],
                 branches: [[name: 'master']],
                 extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'abi/henosis'],
                 [$class: 'ScmName', name: 'henosis'],
@@ -108,7 +108,7 @@ pipeline {
             }
             steps {
                 script {
-                    bat """ xcopy /E /I ${WORKSPACE}\\abi\\henosis\\cac\\arl-h\\win\\ifwi\\idf ${WORKSPACE}\\abi\\idf """
+                    bat """ xcopy /E /I ${WORKSPACE}\\abi\\henosis\\arlh_ftest\\idf ${WORKSPACE}\\abi\\idf """
                     //bat """ mkdir ${WORKSPACE}\\abi\\OWRBin """
                     PrepareWS()
                 } 
