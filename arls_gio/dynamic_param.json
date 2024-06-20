@@ -1,0 +1,8 @@
+{  
+    "dynamic_parameters":{
+        "$OS_Image_URL": "OS_IMAGE_PATH_url",
+        "$release_ifwi_url": "ifwi_image_path_release",
+        "$debug_ifwi_url": "ifwi_image_path_debug",
+        "$cbkc_bsp_release_tag": "latest_tag"
+  }
+}
