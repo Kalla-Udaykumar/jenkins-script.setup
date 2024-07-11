@@ -1,2 +1,3 @@
-gio_cmd: "-profile 410 -jsonfile dynamic_param.json"
-profile_id: 410
+gio_cmd: "-profile 418 -jsonfile dynamic_param.json"
+profile_id: 418
+gio_cmd2: "-jsonfile dynamic_param.json -resultcc teong.tatt.lee@intel.com -result_type html -requestby teong.tatt.lee@intel.com -suiteid 14226 -suiterunid 97177,97197,97176,95703,95786,95803,95887,95888,95933,95935,95943,95965,96915,96943,97174,95625,97198 -nowait -add_date true -testcyclegroup 1475 -newtestcycle ARL-S_IO_Daily_Testing -auto_clone true -sourcetestcycle 121829 -uuid cf48daca-91ea-40f9-adee-a684ce44b226 -timeout 1800"
