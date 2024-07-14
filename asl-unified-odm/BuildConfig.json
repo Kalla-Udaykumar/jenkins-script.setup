@@ -1,0 +1,37 @@
+{
+	"IngredientName":"ASL_WIN_IFWI",
+    "Description":"ASL WIN IFWI Project",
+    "OutputConfiguration":"idf/PackageGen.json",
+    "SchemaVersion":"1.0",
+    "OutputRoot":"OWRBin",
+	"OutputDir":"OWRBuild",
+    "PackageRoot":"OWRPackage",
+    "PackageMetadataTemplate":"idf/PackageMetadataTemplate.json",
+    "SubComponents":[
+	{
+            "Name":"ASLWinIfwiDwnldApp",
+            "Description":"ASL Win Ifwi App download",
+            "ProjectFile":"dwnld.py",
+			"AdditionalFlags": "",
+			"WorkingDirectory": "idf",
+            "ProjectType":"Script"
+        },
+	{
+            "Name":"ASLWinIfwiBuildApp",
+            "Description":"ASL Win Ifwi App build",
+            "ProjectFile":"build.bat",
+			"AdditionalFlags": "",
+			"WorkingDirectory": "idf",
+            "ProjectType":"Script"
+        },
+    {
+            "Name":"ASLWinIfwiBuildOdmApp",
+            "Description":"ASL Win Ifwi App odm",
+            "ProjectFile":"build_odm.bat",
+			"AdditionalFlags": "",
+			"WorkingDirectory": "idf",
+            "ProjectType":"Script"
+        }		
+    ],    
+    "SchemaVersion": "1.0"
+}
