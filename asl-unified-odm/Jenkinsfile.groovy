@@ -332,7 +332,7 @@ pipeline {
                             xcopy /Y /S ${WORKSPACE}\\FIRMWARE\\Drivers\\x64\\Bootloader\\cpd_btldr_signed_adln.bin ${WORKSPACE}\\abi\\ifwi\\HSPE-SWS-SID-PLUTO\\IFWI_Automation\\ASL\\INPUT\\IPU_FW\\
                         """
                     def artServer3 = Artifactory.server "ubit-artifactory-ba.intel.com"
-                    def artFiles  = """ {
+                    def artFiles3  = """ {
                         "files": [
                             {
                                 "pattern": "one-windows-local/Submissions/ish/${ISH_VERSION}/${ISH_FILE}.zip",
