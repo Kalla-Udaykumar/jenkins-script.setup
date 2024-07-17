@@ -73,16 +73,15 @@ pipeline {
     parameters {
         booleanParam(name: 'CLEAN', defaultValue: true, description: 'Clean workspace') 
         booleanParam(name: 'EMAIL', defaultValue: true, description: 'Email notification upon job completion')
-	    //booleanParam(name: 'FORCE_BUILD', defaultValue: false, description: 'Toggle this value if you wish to force build')
-        //string(name: 'GIO_IMG_URL', defaultValue: '', description: 'GIO Value from Upstream')
-        booleanParam(name: 'EMAIL_DB_ENABLE', defaultValue: true, description: 'Caution: Please De-Select this option during Rebuild and on Manual execution of this job.')
         string(name: 'IFWI_VERSION', defaultValue: 'adl_n_win11_mr_blue_ifwi_2022_ww52_4_01', description: 'Provide ifwi_version like ADL_N_ES1_BLUE_IFWI_2022_WW13_5_02')
         string(name: 'BIOS_VERSION', defaultValue: '4424_00', description: 'Provide BIOS_VERSION like 4424_00')
-        string(name: 'CSME_VERSION', defaultValue: '16.50.10.1351v7', description: 'Provide CSME_VERSION like 16.50.10.1351v7')
+        string(name: 'CSME_VERSION', defaultValue: '16.50.12.1453v2', description: 'Provide CSME_VERSION like 16.50.10.1351v7')
         string(name: 'PMC_VERSION', defaultValue: 'ADPN_A0_PMC_FW_160.50.00.1010', description: 'Provide PMC_VERSION like ADPN_A0_PMC_FW_160.50.00.1010')
         string(name: 'CSINIT_VERSION', defaultValue: 'V4', description: 'provide CSINIT_VERSION like V4')
-        string(name: 'PCHC_VERSION', defaultValue: '16.50.0.1012', description: 'Provide PCHC_VERSION like 16.50.0.1012')
-        string(name: 'IPU_VERSION', defaultValue: '63.22000.3.12713-rpl-p-hdmi-prod-win10', description: 'provide IPU_VERSION like 63.22000.3.12713-rpl-p-hdmi-prod-win10')
+        string(name: 'PCHC_VERSION', defaultValue: '16.50.0.1014', description: 'Provide PCHC_VERSION like 16.50.0.1012')
+        string(name: 'IPU_VERSION', defaultValue: '63.22000.3.14762-adl-n-hdmi-prod-win10', description: 'provide IPU_VERSION like 63.22000.3.12713-rpl-p-hdmi-prod-win10')
+        string(name: 'ISH_VERSION', defaultValue: '5.4.2.4595v3', description: 'Provide CSME_VERSION like 16.50.10.1351v7')
+        string(name: 'ISH_FILE', defaultValue: '5.4.2.4594v3', description: 'provide ISH zip file name without .zip at the end')
     }
 
     stages {
@@ -331,17 +330,31 @@ pipeline {
                         bat """
                             unzip ${WORKSPACE}/download/Camera-${IPU_VERSION}.zip -d ${WORKSPACE}/FIRMWARE
                             xcopy /Y /S ${WORKSPACE}\\FIRMWARE\\Drivers\\x64\\Bootloader\\cpd_btldr_signed_adln.bin ${WORKSPACE}\\abi\\ifwi\\HSPE-SWS-SID-PLUTO\\IFWI_Automation\\ASL\\INPUT\\IPU_FW\\
-                            """
+                        """
+                    def artServer3 = Artifactory.server "ubit-artifactory-ba.intel.com"
+                    def artFiles  = """ {
+                        "files": [
+                            {
+                                "pattern": "one-windows-local/Submissions/ish/${ISH_VERSION}/${ISH_FILE}.zip",
+                                "target": "download/",
+                                "flat": "true",
+                                "recursive": "true",
+                                "sortBy": ["modified"],
+                                "sortOrder": "desc",
+                                "limit" : 1
+                            }
+                        ]
+                    }"""
+                    artServer3.download spec: artFiles3 // FW\\bin\\ish_fw_images\\Production_ishC_5.4.2.4595_ADL-N.bin
+                        baat """ 
+                            unzip ${WORKSPACE}\\download\\${ISH_FILE}.zip ${WORKSPACE}\\FIRMWARE
+                            xcopy /Y /S ${WORKSPACE}\\FIRMWARE\\${ISH_FILE}\\FW\\bin\\ish_fw_images\\Production_ishC_${ISH_VERSION}_ADL-N.bin  ${WORKSPACE}\\abi\\ifwi\\HSPE-SWS-SID-PLUTO\\IFWI_Automation\\ASL\\INPUT\\ISH_FW\\
+                        """    
                 }
             }
         }
 
         stage('Build:Ifwi App build') {
-	    when{
-                expression{
-                    env.diff == '0' || params.FORCE_BUILD
-                }
-            }
             agent {
                 docker {
                     image "${DOCKER}"
@@ -359,11 +372,6 @@ pipeline {
 	    }
 
         stage("Artifacts-Deploy") {
-	    when{
-                expression{
-                    env.diff == '0' || params.FORCE_BUILD
-                }
-            }
             agent {
                 docker {
                     image "${DOCKER}"
@@ -373,7 +381,7 @@ pipeline {
             }
             steps {
                 script {
-                        abi_artifact_deploy custom_file: "${WORKSPACE}/abi/reports/", custom_deploy_path: "hpse-adl-png-local/bios-adl/${JOB_BASE_NAME}/${env.DATETIME}-${BUILD_NUMBER}/reports/", custom_artifactory_url: "https://af01p-png.devtools.intel.com", additional_props: "retention.days=365", cred_id: 'BuildAutomation'
+                        abi_artifact_deploy custom_file: "${WORKSPACE}/abi/reports/", custom_deploy_path: "hpse-adl-png-local/bios-adl/${JOB_BASE_NAME}/${env.DATETIME}-${BUILD_NUMBER}/reports/", custom_artifactory_url: "https://af01p-png.devtools.intel.com", additional_props: "retention.days=3", cred_id: 'BuildAutomation'
                 }
             }
         }
@@ -383,32 +391,6 @@ pipeline {
         success {
             script {
                 echo "JOB STATUS - SUCCESS"
-                def BUILD_PATH = null
-                
-                dir("${WORKING_DIR}\\IFWI_Automation\\ASL\\OUTPUT\\IOTG_IFWI\\Internal\\"){
-                    def files = findFiles()
-                    files.each{ f ->
-                        if(f.directory && f.name.contains("ASL")) {
-                            BUILD_PATH = files[0].name
-                        }
-                    } 
-                }
-                echo "BUILD_PATH: ${BUILD_PATH}"
-                ARTIFACTORY_PATH = "ASL/Engineering/2024/Internal/${BUILD_PATH}/NR02/RVP_DDR5"
-                ARTIFACTORY_EXTERNAL = "ASL/Engineering/2024/External/${BUILD_PATH}/NR02/CRB_DDR5"
-                CRB_ARTIFACTORY_PATH = "ASL/Engineering/2024/Internal/${BUILD_PATH}/NR02/CRB_DDR5"
-                JSON_ARTIFACTORY_PATH = "ASL/Engineering/2024/Internal/${BUILD_PATH}"
-                
-                ALL_IFWI_ARTIFACTORY_PATH = "https://af01p-png.devtools.intel.com/artifactory/hspe-iotgfw-adl-png-local/ASL/Engineering/2024/Internal/${BUILD_PATH}/"
-                ARTIFACTORY_PATH = "ASL/Engineering/2024/Internal/${BUILD_PATH}/"
-                ARTIFACTORY_EXTERNAL = "ASL/Engineering/2024/External/${BUILD_PATH}/"
-                if (BUILD_PATH != null) {	
-                    final job3Result = build job: "ASL-WIN-IFWI.ALL-VAL-DLY-GIO", parameters: [string(name: 'ARTIFACTORY_PATH', value: "${ARTIFACTORY_PATH}"), string(name: 'ARTIFACTORY_EXTERNAL', value: "${ARTIFACTORY_EXTERNAL}")],wait: true
-                    echo "Downstream GIO Job3 URL: https://cbjenkins-pg.devtools.intel.com/teams-iotgdevops01/job/iotgdevops01/job/ASL-WIN-IFWI.ALL-VAL-DLY-GIO/${job3Result.number}"
-                }
-                if (params.EMAIL_DB_ENABLE == true) {
-                     build job: "ASL-WIN-IFWI.EMAIL-BD-DLY", wait: false
-                }
             }
         }
         always {
