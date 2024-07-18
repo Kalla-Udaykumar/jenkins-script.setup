@@ -346,9 +346,9 @@ pipeline {
                         ]
                     }"""
                     artServer3.download spec: artFiles3 // FW\\bin\\ish_fw_images\\Production_ishC_5.4.2.4595_ADL-N.bin
-                        baat """ 
-                            unzip ${WORKSPACE}\\download\\${ISH_FILE}.zip ${WORKSPACE}\\FIRMWARE
-                            xcopy /Y /S ${WORKSPACE}\\FIRMWARE\\${ISH_FILE}\\FW\\bin\\ish_fw_images\\Production_ishC_${ISH_VERSION}_ADL-N.bin  ${WORKSPACE}\\abi\\ifwi\\HSPE-SWS-SID-PLUTO\\IFWI_Automation\\ASL\\INPUT\\ISH_FW\\
+                        bat """ 
+                            unzip ${WORKSPACE}/download/${ISH_FILE}.zip -d ${WORKSPACE}/FIRMWARE
+                            xcopy /Y /S ${WORKSPACE}\\FIRMWARE\\FW\\bin\\ish_fw_images\\Production_ishC_*_ADL-N.bin  ${WORKSPACE}\\abi\\ifwi\\HSPE-SWS-SID-PLUTO\\IFWI_Automation\\ASL\\INPUT\\ISH_FW\\
                         """    
                 }
             }
