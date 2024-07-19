@@ -391,6 +391,31 @@ pipeline {
         success {
             script {
                 echo "JOB STATUS - SUCCESS"
+                def BUILD_PATH = null
+                
+                dir("${WORKING_DIR}\\IFWI_Automation\\Unified_IFWI\\ASL\\OUTPUT\\IOTG_IFWI\\Internal\\"){
+                    def files = findFiles()
+                    files.each{ f ->
+                        if(f.directory && f.name.contains("ASL")) {
+                            BUILD_PATH = files[0].name
+                        }
+                    } 
+                }
+                echo "BUILD_PATH: ${BUILD_PATH}"
+                ARTIFACTORY_PATH = "ASL/Engineering/2024/Internal/${BUILD_PATH}/NR02/RVP_DDR5"
+                ARTIFACTORY_EXTERNAL = "ASL/Engineering/2024/External/${BUILD_PATH}/NR02/CRB_DDR5"
+                CRB_ARTIFACTORY_PATH = "ASL/Engineering/2024/Internal/${BUILD_PATH}/NR02/CRB_DDR5"
+                JSON_ARTIFACTORY_PATH = "ASL/Engineering/2024/Internal/${BUILD_PATH}"
+                
+                ALL_IFWI_ARTIFACTORY_PATH = "https://af01p-png.devtools.intel.com/artifactory/hspe-iotgfw-adl-png-local/ASL/Engineering/2024/Internal/${BUILD_PATH}/"
+                ARTIFACTORY_PATH = "ASL/Engineering/2024/Internal/${BUILD_PATH}/"
+                ARTIFACTORY_EXTERNAL = "ASL/Engineering/2024/External/${BUILD_PATH}/"
+                if (BUILD_PATH != null) {	
+                    final job3Result = build job: "ASL-WIN-IFWI.ALL-VAL-DLY-GIO", parameters: [string(name: 'ARTIFACTORY_PATH', value: "${ARTIFACTORY_PATH}"), string(name: 'ARTIFACTORY_EXTERNAL', value: "${ARTIFACTORY_EXTERNAL}")],wait: true
+                    echo "Downstream GIO Job3 URL: https://cbjenkins-pg.devtools.intel.com/teams-iotgdevops01/job/iotgdevops01/job/ASL-WIN-IFWI.ALL-VAL-DLY-GIO/${job3Result.number}"
+                    final job3Result2 = build job: "ADLN-WIN-IFWI.ALL-VAL-DLY-GIO", parameters: [string(name: 'ARTIFACTORY_PATH', value: "${ARTIFACTORY_PATH}"), string(name: 'ARTIFACTORY_EXTERNAL', value: "${ARTIFACTORY_EXTERNAL}")],wait: true
+                    echo "Downstream GIO Job3 URL: https://cbjenkins-pg.devtools.intel.com/teams-iotgdevops01/job/iotgdevops01/job/ADLN-WIN-IFWI.ALL-VAL-DLY-GIO/${job3Result2.number}"
+                }
             }
         }
         always {
