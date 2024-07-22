@@ -81,7 +81,7 @@ pipeline {
         string(name: 'PCHC_VERSION', defaultValue: '16.50.0.1014', description: 'Provide PCHC_VERSION like 16.50.0.1012')
         string(name: 'IPU_VERSION', defaultValue: '63.22000.3.14762-adl-n-hdmi-prod-win10', description: 'provide IPU_VERSION like 63.22000.3.12713-rpl-p-hdmi-prod-win10')
         string(name: 'ISH_VERSION', defaultValue: '5.4.2.4595v3', description: 'Provide CSME_VERSION like 16.50.10.1351v7')
-        string(name: 'ISH_FILE', defaultValue: '5.4.2.4594v3', description: 'provide ISH zip file name without .zip at the end')
+        string(name: 'ISH_FILE', defaultValue: '5.4.2.4595v3', description: 'provide ISH zip file name without .zip at the end')
     }
 
     stages {
@@ -345,7 +345,7 @@ pipeline {
                             }
                         ]
                     }"""
-                    artServer3.download spec: artFiles3 // FW\\bin\\ish_fw_images\\Production_ishC_5.4.2.4595_ADL-N.bin
+                    artServer3.download spec: artFiles3
                         bat """ 
                             unzip ${WORKSPACE}/download/${ISH_FILE}.zip -d ${WORKSPACE}/FIRMWARE
                             xcopy /Y /S ${WORKSPACE}\\FIRMWARE\\FW\\bin\\ish_fw_images\\Production_ishC_*_ADL-N.bin  ${WORKSPACE}\\abi\\ifwi\\HSPE-SWS-SID-PLUTO\\IFWI_Automation\\ASL\\INPUT\\ISH_FW\\
