@@ -83,13 +83,19 @@ pipeline {
 		choice(name: 'PLATFORM', choices: ['ADL', 'ADLPS','ADLN','ICX','RPLS'], description: 'PLATFORM Value from Upstream')
     }
     stages {
+        
+        stage ('CLEAN') {
+            steps {
+                // Recursively deletes the current directory and its contents.
+                deleteDir()
+            }
+        }
         stage('SCM') {
             steps {
                 checkout([
                     $class: 'GitSCM',
                     userRemoteConfigs: [[credentialsId: 'GitHub-Token', url: 'https://github.com/Kalla-Udaykumar/jenkins-script.setup.git']],
                     branches: [[name: "master"]],
-                    //dont forget change into config_branch
                     extensions: [
                         [$class: 'RelativeTargetDirectory', relativeTargetDir: 'henosis_devops'],
                         [$class: 'ScmName', name: 'henosis_devops'],
@@ -98,16 +104,10 @@ pipeline {
                 ])
             }
         }
-        // stage ('CLEAN') {
-        //     steps {
-        //         // Recursively deletes the current directory and its contents.
-        //         deleteDir()
-        //         }
-        // }
         stage('GENERATE DYNAMIC_PARAM JSON'){
             steps {
                 script {
-                    def kernel = readYaml file: "${WORKSPACE}/henosis_devops/Kerenl_Gio/config.yml"
+                    def kernel = readYaml file: "${WORKSPACE}/henosis_devops/Kernel_Gio/config.yml"
                     
                     println "Kernel is: ${KERNEL}"
                     // Access the values from the kernel_mapping dictionary
@@ -121,7 +121,7 @@ pipeline {
                     println "Kernel_version_number: ${Kernel_version_number}"
                     
                     
-                    String dynamicParam = readFile("${WORKSPACE}/henosis_devops/Kerenl_Gio/${PLATFORM}_dynamic_param.json").replaceAll('image_path',"${GIO_IMG_URL}").replaceAll('image_version',"${GIO_IMG_VERSION}").replaceAll('LTS_kernel',"${LTS_kernel}").replaceAll('RT_kernel',"${RT_kernel}").replaceAll('Kernel_version_number',"${Kernel_version_number}")
+                    String dynamicParam = readFile("${WORKSPACE}/henosis_devops/Kernel_Gio/RPLS_dynamic_param.json").replaceAll('image_path',"${GIO_IMG_URL}").replaceAll('image_version',"${GIO_IMG_VERSION}").replaceAll('LTS_kernel',"${LTS_kernel}").replaceAll('RT_kernel',"${RT_kernel}").replaceAll('Kernel_version_number',"${Kernel_version_number}")
                     writeFile file:"${WORKSPACE}/gio_validation/dynamic_param.json", text: dynamicParam
                     def dynamicParam_json = readJSON file: "${WORKSPACE}/gio_validation/dynamic_param.json"
                     println dynamicParam_json
