@@ -1,6 +1,6 @@
 environments:
   - name: ADLN
-    gio_cmd: 
+    gio_cmd:
       - "gio_plugin -jsonfile dynamic_param.json -requestby karn.jye.lau@intel.com -auto_clone true -sourcetestcycle 53144 -newtestcycle PLUTO_ADLN_Bronze_Staging-RT -testcyclegroup 1349 -result_type html -suiteid 12877,12878,12879 -add_date true -nowait -bomlist -uuid 2c4d9625-6337-458d-b50d-1878e7054180 -nowait"
       - "gio_plugin -jsonfile dynamic_param.json -requestby karn.jye.lau@intel.com -auto_clone true -sourcetestcycle 53143 -newtestcycle PLUTO_ADLN_Bronze_Staging-LTS -testcyclegroup 1349 -result_type html -suiteid 12880,12881,12882 -add_date true -nowait -bomlist -uuid 2c4d9625-6337-458d-b50d-1878e7054180 -nowait"
 
