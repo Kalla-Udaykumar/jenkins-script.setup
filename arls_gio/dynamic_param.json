@@ -1,6 +1,0 @@
-{  
-    "dynamic_parameters":{
-        "$ifwi_url": "ifwi_image_path_release",
-        "$cbkc_bsp_release_tag": "latest_tag"
-  }
-}
