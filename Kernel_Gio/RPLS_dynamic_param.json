@@ -1,0 +1,38 @@
+{
+	"suite_run_id":{
+		"86678":[
+			{"KEY":"yocto_bkc_os_image_url", "VALUE":"image_path"},
+			{"KEY":"image_url_version","VALUE":"image_version"}
+		],
+		"86679":[
+			{"KEY":"kernel_name", "VALUE":"LTS_kernel"}
+		],
+		"86667":[
+			{"KEY":"kernel_version", "VALUE":"Kernel_version_number"},
+			{"KEY":"kernel", "VALUE":"Kernel_version_number"}
+		],
+		"86668":[
+			{"KEY":"kernel_version", "VALUE":"Kernel_version_number"}
+		],
+		"89825":[
+			{"KEY":"yocto_bkc_os_image_url", "VALUE":"image_path"},
+			{"KEY":"image_url_version","VALUE":"image_version"}
+		],
+		"86698":[
+			{"KEY":"kernel_name", "VALUE":"RT_kernel"}
+		],
+		"86686":[
+			{"KEY":"kernel_version", "VALUE":"Kernel_version_number"},
+			{"KEY":"kernel", "VALUE":"Kernel_version_number"}
+		],
+		"86687":[
+			{"KEY":"kernel_version", "VALUE":"Kernel_version_number"}
+		],
+		"86699":[
+			{"KEY":"kernel_name", "VALUE":"RT_kernel"}
+		],
+		"86693":[
+			{"KEY":"kernel_name", "VALUE":"RT_kernel"}
+		]
+    }
+}
