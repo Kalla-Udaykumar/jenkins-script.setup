@@ -111,9 +111,14 @@ pipeline {
                     
                     println "Kernel is: ${KERNEL}"
                     // Access the values from the kernel_mapping dictionary
-                    def LTS_kernel = kernel.kernel_mapping."${KERNEL}".LTS_kernel
-                    def RT_kernel = kernel.kernel_mapping."${KERNEL}".RT_kernel
-                    def Kernel_version_number = kernel.kernel_mapping."${KERNEL}".Kernel_version_number
+                    //def LTS_kernel = kernel.kernel_mapping."${KERNEL}".LTS_kernel
+                    //def RT_kernel = kernel.kernel_mapping."${KERNEL}".RT_kernel
+                    //def Kernel_version_number = kernel.kernel_mapping."${KERNEL}".Kernel_version_number
+		    println "Kernel is: ${PICK_KERENL_CONFIG}"
+		    def LTS_kernel = kernel.kernel_mapping."${PICK_KERENL_CONFIG}".LTS_kernel
+                    def RT_kernel = kernel.kernel_mapping."${PICK_KERENL_CONFIG}".RT_kernel
+                    def Kernel_version_number = kernel.kernel_mapping."${PICK_KERENL_CONFIG}".Kernel_version_number
+		    //PICK_KERENL_CONFIG
             
                     // Print the values
                     println "LTS_kernel: ${LTS_kernel}"
