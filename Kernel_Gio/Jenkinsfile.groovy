@@ -114,7 +114,7 @@ pipeline {
                     //def LTS_kernel = kernel.kernel_mapping."${KERNEL}".LTS_kernel
                     //def RT_kernel = kernel.kernel_mapping."${KERNEL}".RT_kernel
                     //def Kernel_version_number = kernel.kernel_mapping."${KERNEL}".Kernel_version_number
-		    println "Kernel is: ${PICK_KERENL_CONFIG}"
+		    println "Kernel staging is: ${PICK_KERENL_CONFIG}"
 		    def LTS_kernel = kernel.kernel_mapping."${KERNEL}"."${PICK_KERENL_CONFIG}".LTS_kernel
                     def RT_kernel = kernel.kernel_mapping."${KERNEL}"."${PICK_KERENL_CONFIG}".RT_kernel
                     def Kernel_version_number = kernel.kernel_mapping."${KERNEL}"."${PICK_KERENL_CONFIG}".Kernel_version_number
