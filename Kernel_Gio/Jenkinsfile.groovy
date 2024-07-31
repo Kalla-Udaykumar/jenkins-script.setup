@@ -88,7 +88,7 @@ pipeline {
                 checkout([
                     $class: 'GitSCM',
                     userRemoteConfigs: [[credentialsId: 'GitHub-Token', url: 'https://github.com/Kalla-Udaykumar/jenkins-script.setup.git']],
-                    branches: [[name: "${params.config_branch}"]],
+                    branches: [[name: "master"]],
                     //dont forget change into config_branch
                     extensions: [
                         [$class: 'RelativeTargetDirectory', relativeTargetDir: 'henosis_devops'],
