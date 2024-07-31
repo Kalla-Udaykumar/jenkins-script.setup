@@ -27,22 +27,20 @@ environments:
       - "gio_plugin -jsonfile dynamic_param.json -requestby ganeash.shanmuganathan@intel.com -sourcetestcycle 58605 -testcyclegroup 1244 -suiteid 13222 -suiterunid 89825,86698,86686,86687,86699,86690,86688,86689,86691,86692,86693,86694,86695,86696,86697,86701 -newtestcycle PLUTO_RPL-S_Bronze_Staging-RT -uuid 098c406a-cfc0-4c42-93e5-49f8a8a068e0 -auto_clone true -add_date true -nowait"
 
 kernel_mapping:
-    Primary_Kernel_Config:
-      Primary_staging:
+    Primary_staging:
         LTS_kernel: intel-iot-staging-6.6
         RT_kernel: intel-iot-staging-rt-6.6
         Kernel_version_number: 6.6
-      Primary_non_staging:
+    Primary_non_staging:
         LTS_kernel: iot-lts-6.6
         RT_kernel: iot-lts-rt-6.6-kernel
         Kernel_version_number: 6.6
-    Secondary_Kernel_Config:
-        Secondary_staging:
-            LTS_kernel: intel-iot-staging-6.1
-            RT_kernel: intel-iot-staging-rt-6.1
-            Kernel_version_number: 6.1
-        Secondary_non_staging:
-            LTS_kernel: iot-lts-6.1
-            RT_kernel: iot-lts-rt-6.1-kernel
-            Kernel_version_number: 6.1
+    Secondary_staging:
+        LTS_kernel: intel-iot-staging-6.1
+        RT_kernel: intel-iot-staging-rt-6.1
+        Kernel_version_number: 6.1
+    Secondary_non_staging:
+        LTS_kernel: iot-lts-6.1
+        RT_kernel: iot-lts-rt-6.1-kernel
+        Kernel_version_number: 6.1
         
