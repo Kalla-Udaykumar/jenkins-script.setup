@@ -87,7 +87,7 @@ pipeline {
             steps {
                 checkout([
                     $class: 'GitSCM',
-                    userRemoteConfigs: [[credentialsId: 'GitHub-Token', url: 'https://github.com/intel-innersource/libraries.devops.jenkins.cac.git']],
+                    userRemoteConfigs: [[credentialsId: 'GitHub-Token', url: 'https://github.com/Kalla-Udaykumar/jenkins-script.setup.git']],
                     branches: [[name: "${params.config_branch}"]],
                     //dont forget change into config_branch
                     extensions: [
