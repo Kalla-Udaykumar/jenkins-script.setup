@@ -19,7 +19,7 @@ environments:
     gio_cmd: 
       - "gio_plugin -jsonfile dynamic_param.json -requestby kalavenix.joseph@intel.com -auto_clone true -sourcetestcycle 59973 -newtestcycle PLUTO_ADLS_INT.SAT_Staging-LTS -testcyclegroup 1576 -result_type html -suiteid 10040 -add_date true -nowait -bomlist -uuid 2460c0ca-0d05-49d6-8d15-66960f9e64db -nowait"
       - "gio_plugin -jsonfile dynamic_param.json -requestby kalavenix.joseph@intel.com -auto_clone true -sourcetestcycle 59974 -newtestcycle PLUTO_ADLS_INT.SAT_Staging-RT -testcyclegroup 1576 -result_type html -suiteid 10041 -add_date true -nowait -bomlist -uuid 2460c0ca-0d05-49d6-8d15-66960f9e64db -nowait" 
-      - "gio_plugin -jsonfile dynamic_param.json -requestby kalavenix.joseph@intel.com -auto_clone true -sourcetestcycle 59970 -newtestcycle PLUTO_ADLP_INT.SAT_StagingLTS -testcyclegroup 1577 -result_type html -suiteid 10329 -add_date true -nowait -bomlist -uuid 2460c0ca-0d05-49d6-8d15-66960f9e64db -nowait"
+      - "gio_plugin -jsonfile dynamic_param.json -requestby kalavenix.joseph@intel.com -auto_clone true -sourcetestcycle 59970 -newtestcycle PLUTO_ADLP_INT.SAT_Staging-LTS -testcyclegroup 1577 -result_type html -suiteid 10329 -add_date true -nowait -bomlist -uuid 2460c0ca-0d05-49d6-8d15-66960f9e64db -nowait"
 
   - name: RPLS
     gio_cmd: 
