@@ -1,7 +1,7 @@
 #!groovy
 
 def getConfig(environments) {
-    props = readYaml file: "${WORKSPACE}/henosis_devops/Kernel_Gio/config.yml"
+    props = readYaml file: "${WORKSPACE}/henosis_devops/cac/gen/lin/bsp/odm-pluto/gio/config.yml"
     def environmentConfigs = props.environments
     println "platform: ${environmentConfigs}"
 
@@ -83,19 +83,13 @@ pipeline {
 		choice(name: 'PLATFORM', choices: ['ADL', 'ADLPS','ADLN','ICX','RPLS'], description: 'PLATFORM Value from Upstream')
     }
     stages {
-        
-        stage ('CLEAN') {
-            steps {
-                // Recursively deletes the current directory and its contents.
-                deleteDir()
-            }
-        }
         stage('SCM') {
             steps {
                 checkout([
                     $class: 'GitSCM',
-                    userRemoteConfigs: [[credentialsId: 'GitHub-Token', url: 'https://github.com/Kalla-Udaykumar/jenkins-script.setup.git']],
-                    branches: [[name: "master"]],
+                    userRemoteConfigs: [[credentialsId: 'GitHub-Token', url: 'https://github.com/intel-innersource/libraries.devops.jenkins.cac.git']],
+                    branches: [[name: "${params.config_branch}"]],
+                    //dont forget change into config_branch
                     extensions: [
                         [$class: 'RelativeTargetDirectory', relativeTargetDir: 'henosis_devops'],
                         [$class: 'ScmName', name: 'henosis_devops'],
@@ -107,18 +101,20 @@ pipeline {
         stage('GENERATE DYNAMIC_PARAM JSON'){
             steps {
                 script {
-                    def kernel = readYaml file: "${WORKSPACE}/henosis_devops/Kernel_Gio/config.yml"
+                    // Access the values from the kernel_mapping dictionary
+                    if ("${PICK_KERNEL_CONFIG}" == "LTS") {
+                        String ltsConfig = readFile("${WORKSPACE}/henosis_devops/cac/gen/lin/bsp/odm-pluto/gio/config.yml").replaceAll('_Staging-', "_")
+                        writeFile file:"${WORKSPACE}/Config.yml", text: ltsConfig
+                    }
+
+                    def kernel = readYaml file: "${WORKSPACE}/Config.yml"
                     
                     println "Kernel is: ${KERNEL}"
-                    // Access the values from the kernel_mapping dictionary
-                    //def LTS_kernel = kernel.kernel_mapping."${KERNEL}".LTS_kernel
-                    //def RT_kernel = kernel.kernel_mapping."${KERNEL}".RT_kernel
-                    //def Kernel_version_number = kernel.kernel_mapping."${KERNEL}".Kernel_version_number
-		    println "Kernel staging is: ${PICK_KERENL_CONFIG}"
-		    def LTS_kernel = kernel.kernel_mapping."${KERNEL}"."${PICK_KERENL_CONFIG}".LTS_kernel
+		            println "Kernel type is: ${PICK_KERENL_CONFIG}"
+
+                    def LTS_kernel = kernel.kernel_mapping."${KERNEL}"."${PICK_KERENL_CONFIG}".LTS_kernel
                     def RT_kernel = kernel.kernel_mapping."${KERNEL}"."${PICK_KERENL_CONFIG}".RT_kernel
                     def Kernel_version_number = kernel.kernel_mapping."${KERNEL}"."${PICK_KERENL_CONFIG}".Kernel_version_number
-		    //PICK_KERENL_CONFIG
             
                     // Print the values
                     println "LTS_kernel: ${LTS_kernel}"
@@ -126,7 +122,7 @@ pipeline {
                     println "Kernel_version_number: ${Kernel_version_number}"
                     
                     
-                    String dynamicParam = readFile("${WORKSPACE}/henosis_devops/Kernel_Gio/RPLS_dynamic_param.json").replaceAll('image_path',"${GIO_IMG_URL}").replaceAll('image_version',"${GIO_IMG_VERSION}").replaceAll('LTS_kernel',"${LTS_kernel}").replaceAll('RT_kernel',"${RT_kernel}").replaceAll('Kernel_version_number',"${Kernel_version_number}")
+                    String dynamicParam = readFile("${WORKSPACE}/henosis_devops/cac/gen/lin/bsp/odm-pluto/gio/${PLATFORM}_dynamic_param.json").replaceAll('image_path',"${GIO_IMG_URL}").replaceAll('image_version',"${GIO_IMG_VERSION}").replaceAll('LTS_kernel',"${LTS_kernel}").replaceAll('RT_kernel',"${RT_kernel}").replaceAll('Kernel_version_number',"${Kernel_version_number}")
                     writeFile file:"${WORKSPACE}/gio_validation/dynamic_param.json", text: dynamicParam
                     def dynamicParam_json = readJSON file: "${WORKSPACE}/gio_validation/dynamic_param.json"
                     println dynamicParam_json
