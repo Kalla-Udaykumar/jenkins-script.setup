@@ -101,34 +101,60 @@ pipeline {
         stage('GENERATE DYNAMIC_PARAM JSON'){
             steps {
                 script {
-		   sh """
-			cp ${WORKSPACE}/henosis_devops/Kernel_Gio/config.yml ${WORKSPACE}/Config.yml
-   		   """
                     // Access the values from the kernel_mapping dictionary
                     if ("${params.PICK_KERNEL_CONFIG}" == "LTS") {
+                        sh """
+                        cp ${WORKSPACE}/henosis_devops/Kernel_Gio/config.yml ${WORKSPACE}/Config.yml
+                        """
+
                         String ltsConfig = readFile("${WORKSPACE}/henosis_devops/Kernel_Gio/config.yml").replaceAll('_Staging-', "_")
-                        writeFile file:"${WORKSPACE}/Config.yml", text: ltsConfig
+                        writeFile file:"${WORKSPACE}/henosis_devops/Kernel_Gio/config.yml", text: ltsConfig
+                        def ltsConfig_yml = readYaml file: "${WORKSPACE}/henosis_devops/Kernel_Gio/config.yml"
+                        println ltsConfig_yml
+
+                        def kernel = readYaml file: "${WORKSPACE}/henosis_devops/Kernel_Gio/config.yml"
+                    
+                        println "Kernel is: ${KERNEL}"
+                        println "Kernel type is: ${PICK_KERENL_CONFIG}"
+
+                        def LTS_kernel = kernel.kernel_mapping."${KERNEL}"."${PICK_KERENL_CONFIG}".LTS_kernel
+                        def RT_kernel = kernel.kernel_mapping."${KERNEL}"."${PICK_KERENL_CONFIG}".RT_kernel
+                        def Kernel_version_number = kernel.kernel_mapping."${KERNEL}"."${PICK_KERENL_CONFIG}".Kernel_version_number
+                
+                        // Print the values
+                        println "LTS_kernel: ${LTS_kernel}"
+                        println "RT_kernel: ${RT_kernel}"
+                        println "Kernel_version_number: ${Kernel_version_number}"
+                        
+                        
+                        String dynamicParam = readFile("${WORKSPACE}/henosis_devops/Kernel_Gio/${PLATFORM}_dynamic_param.json").replaceAll('image_path',"${GIO_IMG_URL}").replaceAll('image_version',"${GIO_IMG_VERSION}").replaceAll('LTS_kernel',"${LTS_kernel}").replaceAll('RT_kernel',"${RT_kernel}").replaceAll('Kernel_version_number',"${Kernel_version_number}")
+                        writeFile file:"${WORKSPACE}/gio_validation/dynamic_param.json", text: dynamicParam
+                        def dynamicParam_json = readJSON file: "${WORKSPACE}/gio_validation/dynamic_param.json"
+                        println dynamicParam_json
                     }
+                    else {
 
-                    def kernel = readYaml file: "${WORKSPACE}/Config.yml"
+                        def kernel = readYaml file: "${WORKSPACE}/henosis_devops/Kernel_Gio/config.yml"
                     
-                    println "Kernel is: ${KERNEL}"
-		    println "Kernel type is: ${PICK_KERENL_CONFIG}"
+                        println "Kernel is: ${KERNEL}"
+                        println "Kernel type is: ${PICK_KERENL_CONFIG}"
 
-                    def LTS_kernel = kernel.kernel_mapping."${KERNEL}"."${PICK_KERENL_CONFIG}".LTS_kernel
-                    def RT_kernel = kernel.kernel_mapping."${KERNEL}"."${PICK_KERENL_CONFIG}".RT_kernel
-                    def Kernel_version_number = kernel.kernel_mapping."${KERNEL}"."${PICK_KERENL_CONFIG}".Kernel_version_number
-            
-                    // Print the values
-                    println "LTS_kernel: ${LTS_kernel}"
-                    println "RT_kernel: ${RT_kernel}"
-                    println "Kernel_version_number: ${Kernel_version_number}"
-                    
-                    
-                    String dynamicParam = readFile("${WORKSPACE}/henosis_devops/Kernel_Gio/${PLATFORM}_dynamic_param.json").replaceAll('image_path',"${GIO_IMG_URL}").replaceAll('image_version',"${GIO_IMG_VERSION}").replaceAll('LTS_kernel',"${LTS_kernel}").replaceAll('RT_kernel',"${RT_kernel}").replaceAll('Kernel_version_number',"${Kernel_version_number}")
-                    writeFile file:"${WORKSPACE}/gio_validation/dynamic_param.json", text: dynamicParam
-                    def dynamicParam_json = readJSON file: "${WORKSPACE}/gio_validation/dynamic_param.json"
-                    println dynamicParam_json
+                        def LTS_kernel = kernel.kernel_mapping."${KERNEL}"."${PICK_KERENL_CONFIG}".LTS_kernel
+                        def RT_kernel = kernel.kernel_mapping."${KERNEL}"."${PICK_KERENL_CONFIG}".RT_kernel
+                        def Kernel_version_number = kernel.kernel_mapping."${KERNEL}"."${PICK_KERENL_CONFIG}".Kernel_version_number
+                
+                        // Print the values
+                        println "LTS_kernel: ${LTS_kernel}"
+                        println "RT_kernel: ${RT_kernel}"
+                        println "Kernel_version_number: ${Kernel_version_number}"
+                        
+                        
+                        String dynamicParam = readFile("${WORKSPACE}/henosis_devops/Kernel_Gio/${PLATFORM}_dynamic_param.json").replaceAll('image_path',"${GIO_IMG_URL}").replaceAll('image_version',"${GIO_IMG_VERSION}").replaceAll('LTS_kernel',"${LTS_kernel}").replaceAll('RT_kernel',"${RT_kernel}").replaceAll('Kernel_version_number',"${Kernel_version_number}")
+                        writeFile file:"${WORKSPACE}/gio_validation/dynamic_param.json", text: dynamicParam
+                        def dynamicParam_json = readJSON file: "${WORKSPACE}/gio_validation/dynamic_param.json"
+                        println dynamicParam_json
+
+                    }
                 }
             }
         }
