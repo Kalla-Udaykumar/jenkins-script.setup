@@ -1,7 +1,7 @@
 #!groovy
 
 def getConfig(environments) {
-    props = readYaml file: "${WORKSPACE}/henosis_devops/cac/gen/lin/bsp/odm-pluto/gio/config.yml"
+    props = readYaml file: "${WORKSPACE}/henosis_devops/Kernel_Gio/config.yml"
     def environmentConfigs = props.environments
     println "platform: ${environmentConfigs}"
 
@@ -102,11 +102,11 @@ pipeline {
             steps {
                 script {
 		   sh """
-			cp ${WORKSPACE}/henosis_devops/cac/gen/lin/bsp/odm-pluto/gio/config.yml ${WORKSPACE}/Config.yml
+			cp ${WORKSPACE}/henosis_devops/Kernel_Gio/config.yml ${WORKSPACE}/Config.yml
    		   """
                     // Access the values from the kernel_mapping dictionary
                     if ("${params.PICK_KERNEL_CONFIG}" == "LTS") {
-                        String ltsConfig = readFile("${WORKSPACE}/henosis_devops/cac/gen/lin/bsp/odm-pluto/gio/config.yml").replaceAll('_Staging-', "_")
+                        String ltsConfig = readFile("${WORKSPACE}/henosis_devops/Kernel_Gio/config.yml").replaceAll('_Staging-', "_")
                         writeFile file:"${WORKSPACE}/Config.yml", text: ltsConfig
                     }
 
@@ -125,7 +125,7 @@ pipeline {
                     println "Kernel_version_number: ${Kernel_version_number}"
                     
                     
-                    String dynamicParam = readFile("${WORKSPACE}/henosis_devops/cac/gen/lin/bsp/odm-pluto/gio/${PLATFORM}_dynamic_param.json").replaceAll('image_path',"${GIO_IMG_URL}").replaceAll('image_version',"${GIO_IMG_VERSION}").replaceAll('LTS_kernel',"${LTS_kernel}").replaceAll('RT_kernel',"${RT_kernel}").replaceAll('Kernel_version_number',"${Kernel_version_number}")
+                    String dynamicParam = readFile("${WORKSPACE}/henosis_devops/Kernel_Gio/${PLATFORM}_dynamic_param.json").replaceAll('image_path',"${GIO_IMG_URL}").replaceAll('image_version',"${GIO_IMG_VERSION}").replaceAll('LTS_kernel',"${LTS_kernel}").replaceAll('RT_kernel',"${RT_kernel}").replaceAll('Kernel_version_number',"${Kernel_version_number}")
                     writeFile file:"${WORKSPACE}/gio_validation/dynamic_param.json", text: dynamicParam
                     def dynamicParam_json = readJSON file: "${WORKSPACE}/gio_validation/dynamic_param.json"
                     println dynamicParam_json
