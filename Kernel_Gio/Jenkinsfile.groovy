@@ -110,7 +110,7 @@ pipeline {
                     def kernel = readYaml file: "${WORKSPACE}/Config.yml"
                     
                     println "Kernel is: ${KERNEL}"
-		            println "Kernel type is: ${PICK_KERENL_CONFIG}"
+		    println "Kernel type is: ${PICK_KERENL_CONFIG}"
 
                     def LTS_kernel = kernel.kernel_mapping."${KERNEL}"."${PICK_KERENL_CONFIG}".LTS_kernel
                     def RT_kernel = kernel.kernel_mapping."${KERNEL}"."${PICK_KERENL_CONFIG}".RT_kernel
