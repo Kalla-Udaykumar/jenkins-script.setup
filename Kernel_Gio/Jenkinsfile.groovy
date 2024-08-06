@@ -101,6 +101,9 @@ pipeline {
         stage('GENERATE DYNAMIC_PARAM JSON'){
             steps {
                 script {
+		   sh """
+			cp ${WORKSPACE}/henosis_devops/cac/gen/lin/bsp/odm-pluto/gio/config.yml ${WORKSPACE}/Config.yml
+   		   """
                     // Access the values from the kernel_mapping dictionary
                     if ("${params.PICK_KERNEL_CONFIG}" == "LTS") {
                         String ltsConfig = readFile("${WORKSPACE}/henosis_devops/cac/gen/lin/bsp/odm-pluto/gio/config.yml").replaceAll('_Staging-', "_")
