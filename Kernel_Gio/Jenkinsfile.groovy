@@ -102,7 +102,7 @@ pipeline {
             steps {
                 script {
                     // Access the values from the kernel_mapping dictionary
-                    if ("${PICK_KERNEL_CONFIG}" == "LTS") {
+                    if ("${params.PICK_KERNEL_CONFIG}" == "LTS") {
                         String ltsConfig = readFile("${WORKSPACE}/henosis_devops/cac/gen/lin/bsp/odm-pluto/gio/config.yml").replaceAll('_Staging-', "_")
                         writeFile file:"${WORKSPACE}/Config.yml", text: ltsConfig
                     }
