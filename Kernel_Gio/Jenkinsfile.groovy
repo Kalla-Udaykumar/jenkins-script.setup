@@ -107,8 +107,8 @@ pipeline {
                         cp ${WORKSPACE}/henosis_devops/Kernel_Gio/config.yml ${WORKSPACE}/Config.yml
                         """
 
-                        String ltsConfig = readFile("${WORKSPACE}/henosis_devops/Kernel_Gio/config.yml").replaceAll('_Staging-', "_")
-                        writeFile file:"${WORKSPACE}/henosis_devops/Kernel_Gio/config.yml", text: ltsConfig
+                        String KernelType = readFile("${WORKSPACE}/henosis_devops/Kernel_Gio/config.yml").replaceAll('_Staging-', "_")
+                        writeFile file:"${WORKSPACE}/henosis_devops/Kernel_Gio/config.yml", text: KernelType
                         def ltsConfig_yml = readYaml file: "${WORKSPACE}/henosis_devops/Kernel_Gio/config.yml"
                         println ltsConfig_yml
 
