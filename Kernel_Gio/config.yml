@@ -1,12 +1,19 @@
 environments:
   - name: ADLN
-    gio_cmd: 
-      - "gio_plugin -jsonfile dynamic_param.json -requestby karn.jye.lau@intel.com -auto_clone true -sourcetestcycle 53144 -newtestcycle PLUTO_ADLN_Bronze_Staging-RT -testcyclegroup 1349 -result_type html -suiteid 12877,12878,12879 -add_date true -nowait -bomlist -uuid 2c4d9625-6337-458d-b50d-1878e7054180 -nowait"
+    gio_cmd_1:
+      - "gio_plugin -jsonfile dynamic_param.json -requestby karn.jye.lau@intel.com -auto_clone true -sourcetestcycle 53144 -newtestcycle PLUTO_ADLN_Bronze_RT -testcyclegroup 1349 -result_type html -suiteid 12877,12878,12879 -add_date true -nowait -bomlist -uuid 2c4d9625-6337-458d-b50d-1878e7054180 -nowait"
       - "gio_plugin -jsonfile dynamic_param.json -requestby karn.jye.lau@intel.com -auto_clone true -sourcetestcycle 53143 -newtestcycle PLUTO_ADLN_Bronze_Staging-LTS -testcyclegroup 1349 -result_type html -suiteid 12880,12881,12882 -add_date true -nowait -bomlist -uuid 2c4d9625-6337-458d-b50d-1878e7054180 -nowait"
 
+    gio_cmd_2:
+      - "gio_plugin -jsonfile dynamic_param.json -requestby karn.jye.lau@intel.com -auto_clone true -sourcetestcycle 53144 -newtestcycle PLUTO_ADLN_Bronze_RT -testcyclegroup 1349 -result_type html -suiteid 12877,12878,12879 -add_date true -nowait -bomlist -uuid 2c4d9625-6337-458d-b50d-1878e7054180 -nowait"
+      - "gio_plugin -jsonfile dynamic_param.json -requestby karn.jye.lau@intel.com -auto_clone true -sourcetestcycle 53143 -newtestcycle PLUTO_ADLN_Bronze_LTS -testcyclegroup 1349 -result_type html -suiteid 12880,12881,12882 -add_date true -nowait -bomlist -uuid 2c4d9625-6337-458d-b50d-1878e7054180 -nowait"
+
   - name: ADLPS
-    gio_cmd: 
+    gio_cmd_1: 
       - "gio_plugin -jsonfile dynamic_param.json -requestby karn.jye.lau@intel.com -auto_clone true -newtestcycle PLUTO_ADLPS_Bronze_Staging-LTS -result_type html -nowait -bomlist -add_date true -uuid 2c4d9625-6337-458d-b50d-1878e7054180 -sourcetestcycle 53242 -testcyclegroup 1301 -suiteid 12965,12966,12967,12968,12969,12970,12971 -suiterunid 84971,84970,84966,84967,84968,84969,84973,84976,84977,84978,84981,84985,84986,96169,96170,96171,96182,96184,96185,96186,96303,84987,84988,84989,84990,96055,96056,84994,84995,95597,84997,84998,84999,85001,85002,95600 -nowait"
+
+    gio_cmd_2:
+      - "gio_plugin -jsonfile dynamic_param.json -requestby karn.jye.lau@intel.com -auto_clone true -newtestcycle PLUTO_ADLPS_Bronze_LTS -result_type html -nowait -bomlist -add_date true -uuid 2c4d9625-6337-458d-b50d-1878e7054180 -sourcetestcycle 53242 -testcyclegroup 1301 -suiteid 12965,12966,12967,12968,12969,12970,12971 -suiterunid 84971,84970,84966,84967,84968,84969,84973,84976,84977,84978,84981,84985,84986,96169,96170,96171,96182,96184,96185,96186,96303,84987,84988,84989,84990,96055,96056,84994,84995,95597,84997,84998,84999,85001,85002,95600 -nowait"
 
   - name: ICX
     gio_cmd: 
@@ -19,7 +26,7 @@ environments:
     gio_cmd: 
       - "gio_plugin -jsonfile dynamic_param.json -requestby kalavenix.joseph@intel.com -auto_clone true -sourcetestcycle 59973 -newtestcycle PLUTO_ADLS_INT.SAT_Staging-LTS -testcyclegroup 1576 -result_type html -suiteid 10040 -add_date true -nowait -bomlist -uuid 2460c0ca-0d05-49d6-8d15-66960f9e64db -nowait"
       - "gio_plugin -jsonfile dynamic_param.json -requestby kalavenix.joseph@intel.com -auto_clone true -sourcetestcycle 59974 -newtestcycle PLUTO_ADLS_INT.SAT_Staging-RT -testcyclegroup 1576 -result_type html -suiteid 10041 -add_date true -nowait -bomlist -uuid 2460c0ca-0d05-49d6-8d15-66960f9e64db -nowait" 
-      - "gio_plugin -jsonfile dynamic_param.json -requestby kalavenix.joseph@intel.com -auto_clone true -sourcetestcycle 59970 -newtestcycle PLUTO_ADLP_INT.SAT_Staging-LTS -testcyclegroup 1577 -result_type html -suiteid 10329 -add_date true -nowait -bomlist -uuid 2460c0ca-0d05-49d6-8d15-66960f9e64db -nowait"
+      - "gio_plugin -jsonfile dynamic_param.json -requestby kalavenix.joseph@intel.com -auto_clone true -sourcetestcycle 59970 -newtestcycle PLUTO_ADLP_INT.SAT_StagingLTS -testcyclegroup 1577 -result_type html -suiteid 10329 -add_date true -nowait -bomlist -uuid 2460c0ca-0d05-49d6-8d15-66960f9e64db -nowait"
 
   - name: RPLS
     gio_cmd: 
