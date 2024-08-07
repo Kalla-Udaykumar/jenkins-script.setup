@@ -1,20 +1,12 @@
 environments:
   - name: ADLN
-    gio_cmd_1:
-      - "gio_plugin -jsonfile dynamic_param.json -requestby karn.jye.lau@intel.com -auto_clone true -sourcetestcycle 53144 -newtestcycle PLUTO_ADLN_Bronze_RT -testcyclegroup 1349 -result_type html -suiteid 12877,12878,12879 -add_date true -nowait -bomlist -uuid 2c4d9625-6337-458d-b50d-1878e7054180 -nowait"
+    gio_cmd:
+      - "gio_plugin -jsonfile dynamic_param.json -requestby karn.jye.lau@intel.com -auto_clone true -sourcetestcycle 53144 -newtestcycle PLUTO_ADLN_Bronze_Staging-RT -testcyclegroup 1349 -result_type html -suiteid 12877,12878,12879 -add_date true -nowait -bomlist -uuid 2c4d9625-6337-458d-b50d-1878e7054180 -nowait"
       - "gio_plugin -jsonfile dynamic_param.json -requestby karn.jye.lau@intel.com -auto_clone true -sourcetestcycle 53143 -newtestcycle PLUTO_ADLN_Bronze_Staging-LTS -testcyclegroup 1349 -result_type html -suiteid 12880,12881,12882 -add_date true -nowait -bomlist -uuid 2c4d9625-6337-458d-b50d-1878e7054180 -nowait"
 
-    gio_cmd_2:
-      - "gio_plugin -jsonfile dynamic_param.json -requestby karn.jye.lau@intel.com -auto_clone true -sourcetestcycle 53144 -newtestcycle PLUTO_ADLN_Bronze_RT -testcyclegroup 1349 -result_type html -suiteid 12877,12878,12879 -add_date true -nowait -bomlist -uuid 2c4d9625-6337-458d-b50d-1878e7054180 -nowait"
-      - "gio_plugin -jsonfile dynamic_param.json -requestby karn.jye.lau@intel.com -auto_clone true -sourcetestcycle 53143 -newtestcycle PLUTO_ADLN_Bronze_LTS -testcyclegroup 1349 -result_type html -suiteid 12880,12881,12882 -add_date true -nowait -bomlist -uuid 2c4d9625-6337-458d-b50d-1878e7054180 -nowait"
-
   - name: ADLPS
-    gio_cmd_1: 
+    gio_cmd: 
       - "gio_plugin -jsonfile dynamic_param.json -requestby karn.jye.lau@intel.com -auto_clone true -newtestcycle PLUTO_ADLPS_Bronze_Staging-LTS -result_type html -nowait -bomlist -add_date true -uuid 2c4d9625-6337-458d-b50d-1878e7054180 -sourcetestcycle 53242 -testcyclegroup 1301 -suiteid 12965,12966,12967,12968,12969,12970,12971 -suiterunid 84971,84970,84966,84967,84968,84969,84973,84976,84977,84978,84981,84985,84986,96169,96170,96171,96182,96184,96185,96186,96303,84987,84988,84989,84990,96055,96056,84994,84995,95597,84997,84998,84999,85001,85002,95600 -nowait"
-
-    gio_cmd_2:
-      - "gio_plugin -jsonfile dynamic_param.json -requestby karn.jye.lau@intel.com -auto_clone true -newtestcycle PLUTO_ADLPS_Bronze_LTS -result_type html -nowait -bomlist -add_date true -uuid 2c4d9625-6337-458d-b50d-1878e7054180 -sourcetestcycle 53242 -testcyclegroup 1301 -suiteid 12965,12966,12967,12968,12969,12970,12971 -suiterunid 84971,84970,84966,84967,84968,84969,84973,84976,84977,84978,84981,84985,84986,96169,96170,96171,96182,96184,96185,96186,96303,84987,84988,84989,84990,96055,96056,84994,84995,95597,84997,84998,84999,85001,85002,95600 -nowait"
-
   - name: ICX
     gio_cmd: 
       - "gio_plugin -jsonfile dynamic_param.json -requestby hemanthX.dp@intel.com -auto_clone true -sourcetestcycle 108094 -newtestcycle PLUTO_EDLD-LCC_Bronze_Staging-LTS -testcyclegroup 1965 -result_type html -suiteid 13386 -add_date true -nowait -bomlist -uuid 3db66fc1-4d52-4ca4-817c-c4c1d61fdb02 -nowait"
