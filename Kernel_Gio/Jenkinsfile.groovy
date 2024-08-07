@@ -81,6 +81,12 @@ pipeline {
 		string(name: 'config_branch', defaultValue: 'refs/heads/master', description: 'Repo branch to checkout config file')
 		choice(name: 'KERNEL', choices: ['Primary_Kernel_Config', 'Secondary_Kernel_Config'], description: 'Select a kernel')
 		choice(name: 'PLATFORM', choices: ['ADL', 'ADLPS','ADLN','ICX','RPLS'], description: 'PLATFORM Value from Upstream')
+	    	activeChoice choiceType: 'PT_SINGLE_SELECT', description: 'This Parameter used to pick the staging and non_staging for both primary and secondary', filterLength: 1, filterable: false, name: 'PICK_KERENL_CONFIG', randomName: 'choice-parameter-3755815350200238', script: groovyScript(fallbackScript: [classpath: [], oldScript: '', sandbox: false, script: ''], script: [classpath: [], oldScript: '', sandbox: false, script: '''if ( KERNEL.equals("Primary_Kernel_Config")) {
+    		return ["LTS-STAGING","LTS"]
+		}
+		else if ( KERNEL.equals("Secondary_Kernel_Config")) {
+     		return ["LTS-STAGING","LTS"]
+		}'''])
     }
     stages {
         stage('SCM') {
