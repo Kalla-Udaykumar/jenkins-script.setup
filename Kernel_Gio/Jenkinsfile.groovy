@@ -81,7 +81,7 @@ pipeline {
 		string(name: 'config_branch', defaultValue: 'refs/heads/master', description: 'Repo branch to checkout config file')
 		choice(name: 'KERNEL', choices: ['Primary_Kernel_Config', 'Secondary_Kernel_Config'], description: 'Select a kernel')
 		choice(name: 'PLATFORM', choices: ['ADL', 'ADLPS','ADLN','ICX','RPLS'], description: 'PLATFORM Value from Upstream')
-	    	choice(name: 'PICK_KERENL_CONFIG', choices: ['LTS-STAGING','LTS'], description: 'PLATFORM Value from Upstream')
+	    	//choice(name: 'PICK_KERENL_CONFIG', choices: ['LTS-STAGING','LTS'], description: 'PLATFORM Value from Upstream')
     }
     stages {
         stage('SCM') {
@@ -116,11 +116,11 @@ pipeline {
                         def kernel = readYaml file: "${WORKSPACE}/henosis_devops/Kernel_Gio/config.yml"
                     
                         println "Kernel is: ${KERNEL}"
-                        println "Kernel type is: ${PICK_KERENL_CONFIG}"
+                        println "Kernel type is: ${PICK_KERNEL_CONFIG}"
 
-                        def LTS_kernel = kernel.kernel_mapping."${KERNEL}"."${PICK_KERENL_CONFIG}".LTS_kernel
-                        def RT_kernel = kernel.kernel_mapping."${KERNEL}"."${PICK_KERENL_CONFIG}".RT_kernel
-                        def Kernel_version_number = kernel.kernel_mapping."${KERNEL}"."${PICK_KERENL_CONFIG}".Kernel_version_number
+                        def LTS_kernel = kernel.kernel_mapping."${KERNEL}"."${PICK_KERNEL_CONFIG}".LTS_kernel
+                        def RT_kernel = kernel.kernel_mapping."${KERNEL}"."${PICK_KERNEL_CONFIG}".RT_kernel
+                        def Kernel_version_number = kernel.kernel_mapping."${KERNEL}"."${PICK_KERNEL_CONFIG}".Kernel_version_number
                 
                         // Print the values
                         println "LTS_kernel: ${LTS_kernel}"
@@ -140,9 +140,9 @@ pipeline {
                         println "Kernel is: ${KERNEL}"
                         println "Kernel type is: ${PICK_KERENL_CONFIG}"
 
-                        def LTS_kernel = kernel.kernel_mapping."${KERNEL}"."${PICK_KERENL_CONFIG}".LTS_kernel
-                        def RT_kernel = kernel.kernel_mapping."${KERNEL}"."${PICK_KERENL_CONFIG}".RT_kernel
-                        def Kernel_version_number = kernel.kernel_mapping."${KERNEL}"."${PICK_KERENL_CONFIG}".Kernel_version_number
+                        def LTS_kernel = kernel.kernel_mapping."${KERNEL}"."${PICK_KERNEL_CONFIG}".LTS_kernel
+                        def RT_kernel = kernel.kernel_mapping."${KERNEL}"."${PICK_KERNEL_CONFIG}".RT_kernel
+                        def Kernel_version_number = kernel.kernel_mapping."${KERNEL}"."${PICK_KERNEL_CONFIG}".Kernel_version_number
                 
                         // Print the values
                         println "LTS_kernel: ${LTS_kernel}"
