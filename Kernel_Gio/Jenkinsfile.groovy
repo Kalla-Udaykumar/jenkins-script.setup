@@ -138,7 +138,7 @@ pipeline {
                         def kernel = readYaml file: "${WORKSPACE}/henosis_devops/Kernel_Gio/config.yml"
                     
                         println "Kernel is: ${KERNEL}"
-                        println "Kernel type is: ${PICK_KERENL_CONFIG}"
+                        println "Kernel type is: ${PICK_KERNEL_CONFIG}"
 
                         def LTS_kernel = kernel.kernel_mapping."${KERNEL}"."${PICK_KERNEL_CONFIG}".LTS_kernel
                         def RT_kernel = kernel.kernel_mapping."${KERNEL}"."${PICK_KERNEL_CONFIG}".RT_kernel
