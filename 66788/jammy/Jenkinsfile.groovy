@@ -576,7 +576,7 @@ pipeline{
                 dir("${WORKSPACE}/PPA/upload") { // https://ubit-artifactory-sh.intel.com/ui/repos/tree/General/esc-internal-local/sandbox
                                 sh"""  
                                     # Delete the 'latest' folder in the artifactory
-                                    curl -u ${BDUSR}:${BDPWD} -v -X DELETE https://ubit-artifactory-sh.intel.com/artifactory/esc-internal-local/sandbox/jammy-latest/ || true
+                                    curl -u ${BDUSR}:${BDPWD} -v -X DELETE https://ubit-artifactory-sh.intel.com/artifactory/esc-internal-local/sandbox/ppa/jammy-latest/ || true
                                 """
                                 def buildInfo = Artifactory.newBuildInfo()
                                 def artServer = Artifactory.server "ubit-artifactory-sh.intel.com"
@@ -584,14 +584,14 @@ pipeline{
                                     "files": [
                                         {
                                             "pattern": "*",
-                                            "target": "esc-internal-local/sandbox/${DATETIME}/jammy/",
-                                            "props": "retention.days=2",
+                                            "target": "esc-internal-local/sandbox/ppa/${DATETIME}/jammy/",
+                                            "props": "retention.days=3",
                                             "flat" : "false"
                                         },
                                         {
                                             "pattern": "*",
-                                            "target": "esc-internal-local/sandbox/jammy-latest/",
-                                            "props": "retention.days=2",
+                                            "target": "esc-internal-local/sandbox/ppa/jammy-latest/",
+                                            "props": "retention.days=3",
                                             "flat" : "false"
                                         }
                                     ]
@@ -601,15 +601,15 @@ pipeline{
                             }
 
                                 // Set the repo url to be used during the image build
-                                env.url_to_use = "https://ubit-artifactory-sh.intel.com/artifactory/esc-internal-local/sandbox/${DATETIME}/jammy"
+                                env.url_to_use = "https://ubit-artifactory-sh.intel.com/artifactory/esc-internal-local/sandbox/ppa/${DATETIME}/jammy"
 
                                 sh"""
                                 # Build-info file to store build-date && upload path
                                 echo ${DATETIME} > ${WORKSPACE}/PPA/upload/build-info
-                                echo https://ubit-artifactory-sh.intel.com/artifactory/esc-internal-local/sandbox/${DATETIME}/jammy/ >> ${WORKSPACE}/PPA/upload/build-info
+                                echo https://ubit-artifactory-sh.intel.com/artifactory/esc-internal-local/sandbox/ppa/${DATETIME}/jammy/ >> ${WORKSPACE}/PPA/upload/build-info
                                 cd ${WORKSPACE}/PPA/upload/
-                                curl -u ${BDUSR}:${BDPWD} -v -X PUT -T build-info https://ubit-artifactory-sh.intel.com/artifactory/esc-internal-local/sandbox/${DATETIME}/jammy/build-info
-                                curl -u ${BDUSR}:${BDPWD} -v -X PUT -T build-info https://ubit-artifactory-sh.intel.com/artifactory/esc-internal-local/sandbox/jammy-latest/build-info
+                                curl -u ${BDUSR}:${BDPWD} -v -X PUT -T build-info https://ubit-artifactory-sh.intel.com/artifactory/esc-internal-local/sandbox/ppa/${DATETIME}/jammy/build-info
+                                curl -u ${BDUSR}:${BDPWD} -v -X PUT -T build-info https://ubit-artifactory-sh.intel.com/artifactory/esc-internal-local/sandbox/ppa/jammy-latest/build-info
                                 """
                         }
                         else{
