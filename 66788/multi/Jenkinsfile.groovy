@@ -3,7 +3,7 @@ import static groovy.json.JsonOutput.*
 pipeline {
     agent {
         node {
-            label 'BSP-DOCKER1-SLES12' //BSP-DOCKER-POOL
+            label 'BSP-DOCKER-POOL' //BSP-DOCKER1-SLES12
         }
     }
     environment {
