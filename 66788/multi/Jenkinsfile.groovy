@@ -65,22 +65,24 @@ pipeline {
             steps {
                 deleteDir()
                 script {
-                    if(params.JAMMY) {
-                    def manifest_name_jammy = (params.MANIFEST_FILE_JAMMY).replace(".json","").trim()
-                    env.manifest_name_jammy = (params.MANIFEST_FILE_JAMMY).replace(".json","").trim()
-                    env.ARTIFACTORY_REPO_JAMMY = "hspe-edge-png-local/ubuntu/" + params.DISTRO_NAME_JAMMY.trim() + "/${manifest_name_jammy}"
-                    ARTIFACTORY_REPO_JAMMY = "hspe-edge-png-local/ubuntu/" + params.DISTRO_NAME_JAMMY.trim() + "/${manifest_name_jammy}"
-                    println("ARTIFACTORY_REPO: " + ARTIFACTORY_REPO_JAMMY)
-                    env.MANIFEST_LOCATION_JAMMY = "${WORKSPACE}/jammy_repo/manifest"
+                    dir("${WORKSPACE}") {
+                       // if(params.JAMMY) { }
+                        def manifest_name_jammy = (params.MANIFEST_FILE_JAMMY).replace(".json","").trim()
+                        env.manifest_name_jammy = (params.MANIFEST_FILE_JAMMY).replace(".json","").trim()
+                        env.ARTIFACTORY_REPO_JAMMY = "hspe-edge-png-local/ubuntu/" + params.DISTRO_NAME_JAMMY.trim() + "/${manifest_name_jammy}"
+                        ARTIFACTORY_REPO_JAMMY = "hspe-edge-png-local/ubuntu/" + params.DISTRO_NAME_JAMMY.trim() + "/${manifest_name_jammy}"
+                        println("ARTIFACTORY_REPO: " + ARTIFACTORY_REPO_JAMMY)
+                        env.MANIFEST_LOCATION_JAMMY = "${WORKSPACE}/jammy_repo/manifest"
                     }
-                    if(params.NOBLE) {
+                    dir("${WORKSPACE}"){
+                        //if(params.NOBLE) { }
                         def manifest_name_noble = (params.MANIFEST_FILE_NOBLE).replace(".json","").trim()
                         env.manifest_name_noble = (params.MANIFEST_FILE_NOBLE).replace(".json","").trim()
                         env.ARTIFACTORY_REPO_NOBLE = "hspe-edge-png-local/ubuntu/" + params.DISTRO_NAME_NOBLE.trim() + "/${manifest_name_noble}"
                         ARTIFACTORY_REPO_NOBLE = "hspe-edge-png-local/ubuntu/" + params.DISTRO_NAME_NOBLE.trim() + "/${manifest_name_noble}"
                         println("ARTIFACTORY_REPO: " + ARTIFACTORY_REPO_NOBLE)
-                        env.MANIFEST_LOCATION_NOBLE = "${WORKSPACE}/noble_repo/manifest"
-                    }   
+                        env.MANIFEST_LOCATION_NOBLE = "${WORKSPACE}/noble_repo/manifest"  
+                    }
                 }
             }   
         }
