@@ -625,61 +625,61 @@ pipeline{
                     }
                 }
             }
-            stage('upload to user repo') {
-                when {
-                    triggeredBy cause: 'UserIdCause' && currentBuild.getBuildCauses('hudson.model.Causes$UpstreamCause').isEmpty()
-                }
+        }
+        stage('upload to user repo') {
+            when {
+                triggeredBy cause: 'UserIdCause' && currentBuild.getBuildCauses('hudson.model.Causes$UpstreamCause').isEmpty()
+            }
 
-                steps{
-                    script{
-                        withCredentials([usernamePassword(credentialsId: 'BuildAutomation', passwordVariable: 'BDPWD', usernameVariable: 'BDUSR')]) {
-                            if(params.UPLOAD){
-                                println("Upload param was set to yes, uploading artifacts!")
-                                dir("${WORKSPACE}/PPA") {
-                                    sh"""
-                                    ls -la
-                                                    $CMD_DOCKER_RUN bash -c "sudo chown -R 44051:17838 ${WORKSPACE}/PPA/ && \
-                                    mkdir ${WORKSPACE}/PPA/upload && mv ${WORKSPACE}/PPA/conf ${WORKSPACE}/PPA/db ${WORKSPACE}/PPA/dists ${WORKSPACE}/PPA/pool ${WORKSPACE}/PPA/upload/ && ls ${WORKSPACE}/PPA/upload/"
-                                    """
-                                }
-                                dir("${WORKSPACE}/PPA/upload") { 
-                                    def buildInfo = Artifactory.newBuildInfo()
-                                    def artServer = Artifactory.server "ubit-artifactory-sh.intel.com"
-                                    def kwrpt  = """{
-                                        "files": [
-                                            {
-                                                "pattern": "*",
-                                                "target": "esc-internal-local/sandbox/ppa/${DATETIME}/jammy/",
-                                                "props": "retention.days=3",
-                                                "flat" : "false"
-                                            },
-                                        ]
-                                    }"""
-                                    artServer.upload spec: kwrpt, buildInfo: buildInfo
-                                    artServer.publishBuildInfo buildInfo
-                                }
+            steps{
+                script{
+                    withCredentials([usernamePassword(credentialsId: 'BuildAutomation', passwordVariable: 'BDPWD', usernameVariable: 'BDUSR')]) {
+                        if(params.UPLOAD){
+                            println("Upload param was set to yes, uploading artifacts!")
+                            dir("${WORKSPACE}/PPA") {
+                                sh"""
+                                ls -la
+                                                $CMD_DOCKER_RUN bash -c "sudo chown -R 44051:17838 ${WORKSPACE}/PPA/ && \
+                                mkdir ${WORKSPACE}/PPA/upload && mv ${WORKSPACE}/PPA/conf ${WORKSPACE}/PPA/db ${WORKSPACE}/PPA/dists ${WORKSPACE}/PPA/pool ${WORKSPACE}/PPA/upload/ && ls ${WORKSPACE}/PPA/upload/"
+                                """
+                            }
+                            dir("${WORKSPACE}/PPA/upload") { 
+                                def buildInfo = Artifactory.newBuildInfo()
+                                def artServer = Artifactory.server "ubit-artifactory-sh.intel.com"
+                                def kwrpt  = """{
+                                    "files": [
+                                        {
+                                            "pattern": "*",
+                                            "target": "esc-internal-local/sandbox/ppa/${DATETIME}/jammy/",
+                                            "props": "retention.days=3",
+                                            "flat" : "false"
+                                        },
+                                    ]
+                                }"""
+                                artServer.upload spec: kwrpt, buildInfo: buildInfo
+                                artServer.publishBuildInfo buildInfo
+                            }
 
-                                    // Set the repo url to be used during the image build
-                                    env.url_to_use = "https://ubit-artifactory-sh.intel.com/artifactory/esc-internal-local/sandbox/ppa/${DATETIME}/jammy"
+                                // Set the repo url to be used during the image build
+                                env.url_to_use = "https://ubit-artifactory-sh.intel.com/artifactory/esc-internal-local/sandbox/ppa/${DATETIME}/jammy"
 
-                                    sh"""
-                                    # Build-info file to store build-date && upload path
-                                    echo ${DATETIME} > ${WORKSPACE}/PPA/upload/build-info
-                                    echo https://ubit-artifactory-sh.intel.com/artifactory/esc-internal-local/sandbox/ppa/${DATETIME}/jammy/ >> ${WORKSPACE}/PPA/upload/build-info
-                                    cd ${WORKSPACE}/PPA/upload/
-                                    curl -u ${BDUSR}:${BDPWD} -v -X PUT -T build-info https://ubit-artifactory-sh.intel.com/artifactory/esc-internal-local/sandbox/ppa/${DATETIME}/jammy/build-info
-                                    """
-                            }
-                            else{
-                                println("Upload param was set to false, not uploading artifacts!")
-                            }
-                            /* if(params.USE_COMMIT){
-                                sh"curl -u ${BDUSR}:${BDPWD} -v -X PUT -T ${env.MANIFEST_LOCATION}/${params.MANIFEST_FILE} https:///artifactory/${MANIFEST_REPO}/${params.MANIFEST_FILE}"
-                            }
-                            else{
-                                sh"curl -u ${BDUSR}:${BDPWD} -v -X PUT -T current_run_commits.json https://${ARTIFACTORY_SERVER}/artifactory/${MANIFEST_REPO}/${params.MANIFEST_FILE}"
-                            }*/
+                                sh"""
+                                # Build-info file to store build-date && upload path
+                                echo ${DATETIME} > ${WORKSPACE}/PPA/upload/build-info
+                                echo https://ubit-artifactory-sh.intel.com/artifactory/esc-internal-local/sandbox/ppa/${DATETIME}/jammy/ >> ${WORKSPACE}/PPA/upload/build-info
+                                cd ${WORKSPACE}/PPA/upload/
+                                curl -u ${BDUSR}:${BDPWD} -v -X PUT -T build-info https://ubit-artifactory-sh.intel.com/artifactory/esc-internal-local/sandbox/ppa/${DATETIME}/jammy/build-info
+                                """
                         }
+                        else{
+                            println("Upload param was set to false, not uploading artifacts!")
+                        }
+                        /* if(params.USE_COMMIT){
+                            sh"curl -u ${BDUSR}:${BDPWD} -v -X PUT -T ${env.MANIFEST_LOCATION}/${params.MANIFEST_FILE} https:///artifactory/${MANIFEST_REPO}/${params.MANIFEST_FILE}"
+                        }
+                        else{
+                            sh"curl -u ${BDUSR}:${BDPWD} -v -X PUT -T current_run_commits.json https://${ARTIFACTORY_SERVER}/artifactory/${MANIFEST_REPO}/${params.MANIFEST_FILE}"
+                        }*/
                     }
                 }
             }
