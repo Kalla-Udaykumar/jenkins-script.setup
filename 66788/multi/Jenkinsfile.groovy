@@ -408,7 +408,8 @@ pipeline {
                     sh"""
                         $PACKAGE_SIGN_DOCKER bash -c 'cd ${WORKSPACE}/Latest-files/noble/ && \
                         sudo chmod +x cp_jammy_to_noble.sh && \
-                        ./cp_jammy_to_noble.sh ${WORKSPACE}/Latest-files/jammy'
+                        ./cp_jammy_to_noble.sh ${WORKSPACE}/Latest-files/jammy
+                        rm -rf cp_jammy_to_noble.sh'
                     """
                 }
             }
@@ -435,7 +436,7 @@ pipeline {
                                             "target": "esc-internal-local/sandbox/ppa/${DATETIME}/",
                                             "props": "retention.days=4",
                                             "flat" : "false"
-                                        },
+                                        }
                                     ]
                                 }"""
                                 artServer.upload spec: kwrpt, buildInfo: buildInfo
