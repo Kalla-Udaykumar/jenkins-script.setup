@@ -150,46 +150,54 @@ pipeline {
 
         stage('BUILD') {
             steps {
-                parallel(
+                parallel (
                     "ADL-LIN-EDGE-BD-DLY-PKGGEN": {
-                        build job: 'ADL-LIN-EDGE-BD-DLY-PKGGEN', \
-                        parameters: [string(name: 'MANIFEST_GIT_REPO', value: "${MANIFEST_REPO_JAMMY}"), \
-                        string(name: 'MANIFEST_REPO_BRANCH', value: "${JAMMY_MANIFEST_BRANCH}"), \
-                        string(name: 'MANIFEST_FILE', value: "${MANIFEST_FILE_JAMMY}"), \
-                        string(name: 'KERNELS_FILE', value: "${KERNELS_FILE}"), \
-                        string(name: 'EXTRA_DEBS', value: "${EXTRA_DEBS_JAMMY}"), \
-                        string(name: 'DISTRO_NAME', value: "${DISTRO_NAME_JAMMY}"), \
-                        string(name: 'VARIANT_TO_BUILD', value: "${VARIANT_TO_BUILD}"), \
-                        text(name: 'FIXED_PACKAGE_LINKS', value: "${params.FIXED_PACKAGE_LINKS}"), \
-                        text(name: "PACKAGE_NAMES", value: "${params.PACKAGE_NAMES}"), \
-                        text(name: "PACKAGE_REPOS", value: "${params.PACKAGE_REPOS}"), \
-                        text(name: "REMOVE_PACKAGES", value: "${params.REMOVE_PACKAGES}"), \
-                        booleanParam(name: 'UPLOAD', value: "${params.UPLOAD}"), \
-                        booleanParam(name: 'USE_COMMIT', value: "${params.USE_COMMIT}"), \
-                        booleanParam(name: 'FORCE_BUILD', value: "${params.FORCE_BUILD}"), \
-                        string(name: 'UPSTREAM_DATE', value: "${DATETIME}"), \
-                        string(name: "ARTIFACTORY_SERVER", value: "${ARTIFACTORY_SERVER}"), \
-                        string(name: "ARTIFACTORY_REPO", value: "${ARTIFACTORY_REPO}")], wait: true
+                        if (params.JAMMY) {
+                            build job: 'ADL-LIN-EDGE-BD-DLY-PKGGEN', \
+                            parameters: [string(name: 'MANIFEST_GIT_REPO', value: "${MANIFEST_REPO_JAMMY}"), \
+                            string(name: 'MANIFEST_REPO_BRANCH', value: "${JAMMY_MANIFEST_BRANCH}"), \
+                            string(name: 'MANIFEST_FILE', value: "${MANIFEST_FILE_JAMMY}"), \
+                            string(name: 'KERNELS_FILE', value: "${KERNELS_FILE}"), \
+                            string(name: 'EXTRA_DEBS', value: "${EXTRA_DEBS_JAMMY}"), \
+                            string(name: 'DISTRO_NAME', value: "${DISTRO_NAME_JAMMY}"), \
+                            string(name: 'VARIANT_TO_BUILD', value: "${VARIANT_TO_BUILD}"), \
+                            text(name: 'FIXED_PACKAGE_LINKS', value: "${params.FIXED_PACKAGE_LINKS}"), \
+                            text(name: "PACKAGE_NAMES", value: "${params.PACKAGE_NAMES}"), \
+                            text(name: "PACKAGE_REPOS", value: "${params.PACKAGE_REPOS}"), \
+                            text(name: "REMOVE_PACKAGES", value: "${params.REMOVE_PACKAGES}"), \
+                            booleanParam(name: 'UPLOAD', value: "${params.UPLOAD}"), \
+                            booleanParam(name: 'USE_COMMIT', value: "${params.USE_COMMIT}"), \
+                            booleanParam(name: 'FORCE_BUILD', value: "${params.FORCE_BUILD}"), \
+                            string(name: 'UPSTREAM_DATE', value: "${DATETIME}"), \
+                            string(name: "ARTIFACTORY_SERVER", value: "${ARTIFACTORY_SERVER}"), \
+                            string(name: "ARTIFACTORY_REPO", value: "${ARTIFACTORY_REPO}")], wait: true
+                        } else {
+                            echo 'Skipping ADL-LIN-EDGE-BD-DLY-PKGGEN due to condition params.JAMMY equals to fals'
+                        }
                     },
                     "ADL-LIN-EDGE-BD-DLY-PKGGEN-NOBLE": {
-                        build job: 'ADL-LIN-EDGE-BD-DLY-PKGGEN-NOBLE', \
-                        parameters: [string(name: 'MANIFEST_GIT_REPO', value: "${MANIFEST_REPO_NOBLE}"), \
-                        string(name: 'MANIFEST_REPO_BRANCH', value: "${NOBLE_MANIFEST_BRANCH}"), \
-                        string(name: 'MANIFEST_FILE', value: "${MANIFEST_FILE_NOBLE}"), \
-                        string(name: 'KERNELS_FILE', value: "${KERNELS_FILE}"), \
-                        string(name: 'EXTRA_DEBS', value: "${EXTRA_DEBS_NOBLE}"), \
-                        string(name: 'DISTRO_NAME', value: "${DISTRO_NAME_NOBLE}"), \
-                        string(name: 'VARIANT_TO_BUILD', value: "${VARIANT_TO_BUILD}"), \
-                        text(name: 'FIXED_PACKAGE_LINKS', value: "${params.FIXED_PACKAGE_LINKS}"), \
-                        text(name: "PACKAGE_NAMES", value: "${params.PACKAGE_NAMES}"), \
-                        text(name: "PACKAGE_REPOS", value: "${params.PACKAGE_REPOS}"), \
-                        text(name: "REMOVE_PACKAGES", value: "${params.REMOVE_PACKAGES}"), \
-                        booleanParam(name: 'UPLOAD', value: "${params.UPLOAD}"), \
-                        booleanParam(name: 'USE_COMMIT', value: "${params.USE_COMMIT}"), \
-                        booleanParam(name: 'FORCE_BUILD', value: "${params.FORCE_BUILD}"), \
-                        string(name: 'UPSTREAM_DATE', value: "${DATETIME}"), \
-                        string(name: "ARTIFACTORY_SERVER", value: "${ARTIFACTORY_SERVER}"), \
-                        string(name: "ARTIFACTORY_REPO", value: "${ARTIFACTORY_REPO}")], wait: true
+                        if(params.NOBLE) {
+                            build job: 'ADL-LIN-EDGE-BD-DLY-PKGGEN-NOBLE', \
+                            parameters: [string(name: 'MANIFEST_GIT_REPO', value: "${MANIFEST_REPO_NOBLE}"), \
+                            string(name: 'MANIFEST_REPO_BRANCH', value: "${NOBLE_MANIFEST_BRANCH}"), \
+                            string(name: 'MANIFEST_FILE', value: "${MANIFEST_FILE_NOBLE}"), \
+                            string(name: 'KERNELS_FILE', value: "${KERNELS_FILE}"), \
+                            string(name: 'EXTRA_DEBS', value: "${EXTRA_DEBS_NOBLE}"), \
+                            string(name: 'DISTRO_NAME', value: "${DISTRO_NAME_NOBLE}"), \
+                            string(name: 'VARIANT_TO_BUILD', value: "${VARIANT_TO_BUILD}"), \
+                            text(name: 'FIXED_PACKAGE_LINKS', value: "${params.FIXED_PACKAGE_LINKS}"), \
+                            text(name: "PACKAGE_NAMES", value: "${params.PACKAGE_NAMES}"), \
+                            text(name: "PACKAGE_REPOS", value: "${params.PACKAGE_REPOS}"), \
+                            text(name: "REMOVE_PACKAGES", value: "${params.REMOVE_PACKAGES}"), \
+                            booleanParam(name: 'UPLOAD', value: "${params.UPLOAD}"), \
+                            booleanParam(name: 'USE_COMMIT', value: "${params.USE_COMMIT}"), \
+                            booleanParam(name: 'FORCE_BUILD', value: "${params.FORCE_BUILD}"), \
+                            string(name: 'UPSTREAM_DATE', value: "${DATETIME}"), \
+                            string(name: "ARTIFACTORY_SERVER", value: "${ARTIFACTORY_SERVER}"), \
+                            string(name: "ARTIFACTORY_REPO", value: "${ARTIFACTORY_REPO}")], wait: true
+                        } else {
+                            echo 'Skipping ADL-LIN-EDGE-BD-DLY-PKGGEN-NOBLE due to condition params.NOBLE equals to false'
+                        }
                     }
                 )
             }
