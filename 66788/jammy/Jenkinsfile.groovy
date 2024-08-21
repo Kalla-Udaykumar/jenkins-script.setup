@@ -585,7 +585,7 @@ pipeline{
                                     "files": [
                                         {
                                             "pattern": "*",
-                                            "target": "esc-internal-local/sandbox/ppa/${DATETIME}/jammy/",
+                                            "target": "esc-internal-local/sandbox/ppa/jammy/${DATETIME}/",
                                             "props": "retention.days=3",
                                             "flat" : "false"
                                         },
