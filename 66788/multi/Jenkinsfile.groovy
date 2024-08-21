@@ -14,6 +14,11 @@ pipeline {
         API_ID = credentials('github-api-token');
         MANIFEST_REPO = "hspe-edge-png-local/ubuntu/manifest-file";
         KEYS_REPO = "hspe-edge-png-local/ubuntu/keys";
+
+        PACKAGE_SIGN_DOCKER = "docker run --rm -t \
+        --privileged -e LOCAL_USER=lab_bldmstr -e LOCAL_USER_ID=`id -u` -e LOCAL_GROUP_ID=`id -g` \
+        -v ${WORKSPACE}:${WORKSPACE} --name ${BUILD_TAG}_PKG_SIGN \
+        amr-registry.caas.intel.com/esc-devops/gen/lin/ubuntu/pkg-sign/package-signature:20220817_1216"
         
     }
     options {
@@ -65,8 +70,7 @@ pipeline {
             steps {
                 deleteDir()
                 script {
-                    dir("${WORKSPACE}") {
-                       // if(params.JAMMY) { }
+                    if(params.JAMMY) {
                         def manifest_name_jammy = (params.MANIFEST_FILE_JAMMY).replace(".json","").trim()
                         env.manifest_name_jammy = (params.MANIFEST_FILE_JAMMY).replace(".json","").trim()
                         env.ARTIFACTORY_REPO_JAMMY = "hspe-edge-png-local/ubuntu/" + params.DISTRO_NAME_JAMMY.trim() + "/${manifest_name_jammy}"
@@ -74,8 +78,7 @@ pipeline {
                         println("ARTIFACTORY_REPO: " + ARTIFACTORY_REPO_JAMMY)
                         env.MANIFEST_LOCATION_JAMMY = "${WORKSPACE}/jammy_repo/manifest"
                     }
-                    dir("${WORKSPACE}"){
-                        //if(params.NOBLE) { }
+                    if(params.NOBLE) { 
                         def manifest_name_noble = (params.MANIFEST_FILE_NOBLE).replace(".json","").trim()
                         env.manifest_name_noble = (params.MANIFEST_FILE_NOBLE).replace(".json","").trim()
                         env.ARTIFACTORY_REPO_NOBLE = "hspe-edge-png-local/ubuntu/" + params.DISTRO_NAME_NOBLE.trim() + "/${manifest_name_noble}"
@@ -191,6 +194,7 @@ pipeline {
                 )
             }
         }
+
         
         stage('DOWNLOAD MANIFEST') {
             steps {
@@ -252,21 +256,24 @@ pipeline {
         stage('Convert Git urls to https') {
             steps {
                 script {
+                    if(params.JAMMY) {
                     sh"""
                     
                         python3 ${WORKSPACE}/engservices/tools/etc/change-regex/git_to_https.py --manifest ${env.MANIFEST_LOCATION_JAMMY}/${params.MANIFEST_FILE_JAMMY}
                         # Copy manifest to the jenkins-script manifest folder
                         cp ${env.MANIFEST_LOCATION_JAMMY}/${params.MANIFEST_FILE_JAMMY} ${WORKSPACE}/jenkins-script/manifest/
                     """    
-                       // curl -o jammy-artifactory-manifest.json https://${ARTIFACTORY_SERVER}/artifactory/${MANIFEST_REPO}/${params.MANIFEST_FILE_JAMMY}
-                    // """
+                    }
+                    if(params.NOBLE) {
                     sh"""
                         python3 ${WORKSPACE}/engservices/tools/etc/change-regex/git_to_https.py --manifest ${env.MANIFEST_LOCATION_NOBLE}/${params.MANIFEST_FILE_NOBLE}
                         # Copy manifest to the jenkins-script manifest folder
                         cp ${env.MANIFEST_LOCATION_NOBLE}/${params.MANIFEST_FILE_NOBLE} ${WORKSPACE}/jenkins-script/manifest/
                     """ 
-                       // curl -o noble-artifactory-manifest.json https://${ARTIFACTORY_SERVER}/artifactory/${MANIFEST_REPO}/${params.MANIFEST_FILE_NOBLE}
-                        // """
+                    }
+                    else {
+                        echo"!!! SKIPPING STAGE !!! NO CHANGES DETECTED"
+                    }
                 }
             }
         }
@@ -348,33 +355,34 @@ pipeline {
         stage ('DOWNLOAD LATEST FILES FOR JAMMY AND NOBLE') {
             steps {
                 script {
-                    dir('${WORKSPACE}') {
+                    dir("${WORKSPACE}") {
                         sh""" 
                         mkdir -p ${WORKSPACE}/Latest-files
                         mkdir -p ${WORKSPACE}/Latest-files/noble
                         mkdir -p ${WORKSPACE}/Latest-files/jammy
                         """
-
+                    }
+                    dir("${WORKSPACE}") {
                         def artServer = Artifactory.server "ubit-artifactory-sh.intel.com"
                         def artFiles1  = """ {
                             "files": [
                                 {
-                                    "pattern": "esc-internal-local/sandbox/ppa/noble-latest/(*)",
-                                    "target": "Latest-files/noble/{1}",
-                                    "flat": "false",
+                                    "pattern": "esc-internal-local/sandbox/ppa/noble-latest/",
+                                    "target": "Latest-files/noble/",
+                                    "flat": "false"
                                 }
                             ]
                         }"""
                         artServer.download spec: artFiles1
                     }
-                    dir('${WORKSPACE}') {
+                    dir("${WORKSPACE}") {
                         def artServer = Artifactory.server "ubit-artifactory-sh.intel.com"
                         def artFiles2  = """ {
                             "files": [
                                 {
-                                    "pattern": "esc-internal-local/sandbox/ppa/jammy-latest/(*)",
-                                    "target": "Latest-files/jammy/{1}",
-                                    "flat": "false",
+                                    "pattern": "esc-internal-local/sandbox/ppa/jammy-latest/",
+                                    "target": "Latest-files/jammy/",
+                                    "flat": "false"
                                 }
                             ]
                         }"""
@@ -384,12 +392,23 @@ pipeline {
             }
         }
 
-        stage('COPY ONE CONTENT TO OTHER') {
+        stage('COPY JAMMY CONTENT TO NOBLE') {
             steps {
                 script {
                     sh"""
-                    cp ${WORKSPACE}/cac_repo/66788/noble/nobleppaa.sh ${WORKSPACE}/
-
+                    cp -R ${WORKSPACE}/Latest-files/jammy/sandbox/ppa/jammy-latest/* ${WORKSPACE}/Latest-files/jammy/ && \
+                    cd ${WORKSPACE}/Latest-files/jammy/ && \
+                    rm -rf ${WORKSPACE}/Latest-files/jammy/sandbox && \
+                    cp -R ${WORKSPACE}/Latest-files/noble/sandbox/ppa/noble-latest/* ${WORKSPACE}/Latest-files/noble/ && \
+                    cd ${WORKSPACE}/Latest-files/noble/ && \
+                    rm -rf ${WORKSPACE}/Latest-files/noble/sandbox && \
+                    rm -rf ${WORKSPACE}/Latest-files/noble/build-info && \
+                    cp ${WORKSPACE}/cac_repo/66788/noble/cp_jammy_to_noble.sh .
+                    """
+                    sh"""
+                        $PACKAGE_SIGN_DOCKER bash -c 'cd ${WORKSPACE}/Latest-files/noble/ && \
+                        sudo chmod +x cp_jammy_to_noble.sh && \
+                        ./cp_jammy_to_noble.sh ${WORKSPACE}/Latest-files/jammy'
                     """
                 }
             }
@@ -398,41 +417,52 @@ pipeline {
         stage ('PUBLISH WHEN BOTH HAVE CHANGES') {
             when {
                 expression {
-                    env.jammy == '1' && env.noble == '1'
+                    env.jammy == '1' || env.noble == '1'
                 }
             }
             steps {
                 script {
-                    
-                    echo "this one worked"
-                    echo "check other methods"
-                    echo "PUBLISH WHEN BOTH HAVE CHANGES"
-                }
-            }
-        }
+                    withCredentials([usernamePassword(credentialsId: 'BuildAutomation', passwordVariable: 'BDPWD', usernameVariable: 'BDUSR')]) {
+                        if(params.UPLOAD){
+                            println("Upload param was set to yes, uploading artifacts!")
+                            dir("${WORKSPACE}/Latest-files/noble") { 
+                                def buildInfo = Artifactory.newBuildInfo()
+                                def artServer = Artifactory.server "ubit-artifactory-sh.intel.com"
+                                def kwrpt  = """{
+                                    "files": [
+                                        {
+                                            "pattern": "*",
+                                            "target": "esc-internal-local/sandbox/ppa/${DATETIME}/",
+                                            "props": "retention.days=4",
+                                            "flat" : "false"
+                                        },
+                                    ]
+                                }"""
+                                artServer.upload spec: kwrpt, buildInfo: buildInfo
+                                artServer.publishBuildInfo buildInfo
+                            }
 
-        stage ('PUBLISH WHEN JAMMY HAVE CHANGES') {
-            when {
-                expression {
-                    env.jammy == '1' && env.noble != '1'
-                }
-            }
-            steps {
-                script {
-                    echo "PUBLISH WHEN JAMMY HAVE CHANGES"
-                }
-            }
-        }
+                                // Set the repo url to be used during the image build
+                                env.url_to_use = "https://ubit-artifactory-sh.intel.com/artifactory/esc-internal-local/sandbox/ppa/${DATETIME}/"
 
-        stage ('PUBLISH WHEN NOBLE HAVE CHANGES') {
-            when {
-                expression {
-                    env.jammy != '1' && env.noble == '1'
-                }
-            }
-            steps {
-                script {
-                    echo "PUBLISH WHEN NOBLE HAVE CHANGES"
+                                sh"""
+                                # Build-info file to store build-date && upload path
+                                echo ${DATETIME} > ${WORKSPACE}/Latest-files/noble/build-info
+                                echo https://ubit-artifactory-sh.intel.com/artifactory/esc-internal-local/sandbox/ppa/${DATETIME}/ >> ${WORKSPACE}/Latest-files/noble/build-info
+                                cd ${WORKSPACE}/Latest-files/noble/
+                                curl -u ${BDUSR}:${BDPWD} -v -X PUT -T build-info https://ubit-artifactory-sh.intel.com/artifactory/esc-internal-local/sandbox/ppa/${DATETIME}/build-info
+                                """
+                        }
+                        else{
+                            println("Upload param was set to false, not uploading artifacts!")
+                        }
+                        /* if(params.USE_COMMIT){
+                            sh"curl -u ${BDUSR}:${BDPWD} -v -X PUT -T ${env.MANIFEST_LOCATION}/${params.MANIFEST_FILE} https:///artifactory/${MANIFEST_REPO}/${params.MANIFEST_FILE}"
+                        }
+                        else{
+                            sh"curl -u ${BDUSR}:${BDPWD} -v -X PUT -T current_run_commits.json https://${ARTIFACTORY_SERVER}/artifactory/${MANIFEST_REPO}/${params.MANIFEST_FILE}"
+                        }*/
+                    }
                 }
             }
         }
