@@ -630,7 +630,7 @@ pipeline{
         stage('upload to user repo') {
             when {
                 expression {
-                    triggeredBy cause: 'UserIdCause' && !currentBuild.getBuildCauses('hudson.model.Causes$UpstreamCause').isEmpty()
+                    { params.USER_UPLOAD == true }
                 }
             }
 
