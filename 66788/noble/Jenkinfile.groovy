@@ -558,7 +558,7 @@ pipeline{
         stage("Upload packages to repo"){
             when{
                 expression{
-                    env.diff == '1' && !currentBuild.getBuildCauses('hudson.model.Causes$UpstreamCause').isEmpty()
+                    env.diff == '1'
                 }
             }
             steps{
