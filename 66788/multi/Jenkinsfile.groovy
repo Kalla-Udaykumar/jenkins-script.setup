@@ -435,7 +435,7 @@ pipeline {
 
         stage ('PUBLISH') {
             when {
-                anyOf {
+                expression {
                     env.jammy == '1' || env.noble == '1'
                 }
             }
