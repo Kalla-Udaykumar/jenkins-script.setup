@@ -367,7 +367,7 @@ pipeline {
             }
         }
 
-        stage ('DOWNLOAD FILES FROM ARTIFACTORY') {
+        stage ('DOWNLOAD LATESTFILES') {
             when {
                 expression { params.UPLOAD == true }
             }
