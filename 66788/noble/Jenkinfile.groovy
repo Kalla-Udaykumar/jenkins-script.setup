@@ -628,9 +628,7 @@ pipeline{
 
         stage('upload to user repo') {
             when {
-                expression {
-                    { params.USER_UPLOAD == true }
-                }
+                expression { params.USER_UPLOAD == true }
             }
             steps{
                 script{
