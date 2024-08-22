@@ -239,7 +239,7 @@ pipeline {
             script{
                 echo "Logparser code removed!"
                 if (params.EMAIL == true) {
-                    emailext body: '${SCRIPT, template="managed:pipeline.html"}', subject: '$DEFAULT_SUBJECT', replyTo: '$DEFAULT_REPLYTO', to: '$DEFAULT_RECIPIENTS, nachiketa.kumar@intel.com, kshitij.gupta@intel.com, anisetti.avinash.krishna@intel.com'
+                    emailext body: '${SCRIPT, template="managed:pipeline.html"}', subject: '$DEFAULT_SUBJECT', replyTo: '$DEFAULT_REPLYTO', to: '$DEFAULT_RECIPIENTS, nachiketa.kumar@intel.com'
                 }
             }
         }
