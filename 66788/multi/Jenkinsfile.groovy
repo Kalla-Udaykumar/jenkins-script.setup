@@ -411,6 +411,9 @@ pipeline {
         }
 
         stage('COPY JAMMY CONTENT TO NOBLE') {
+            when {
+                expression { params.UPLOAD == true }
+            }
             steps {
                 script {
                     sh"""
