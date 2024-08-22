@@ -99,6 +99,7 @@ pipeline{
         booleanParam(name: 'UPLOAD', defaultValue: false, description: 'Toggle this value if you wish to not upload artifacts to artifactory')
         booleanParam(name: 'USE_COMMIT', defaultValue: false, description: 'Toggle this value if you wish use commit id instead of branch')
         booleanParam(name: 'FORCE_BUILD', defaultValue: false, description: 'Toggle this value if you wish to force build')
+        booleanParam(name: 'USER_UPLOAD', defaultValue: false, description: 'Toggle this value if you wish to not upload artifacts to artifactory')
     }
 
     stages{
@@ -558,7 +559,7 @@ pipeline{
         stage("Upload packages to repo"){
             when{
                 expression{
-                    env.diff == '1' && !currentBuild.getBuildCauses('hudson.model.Causes$UpstreamCause').isEmpty()
+                    env.diff == '1' && currentBuild.getBuildCauses('hudson.model.Causes$UpstreamCause').isEmpty()
                     //triggeredBy cause: "UpstreamCause"
                 }
             }
@@ -628,7 +629,9 @@ pipeline{
         }
         stage('upload to user repo') {
             when {
-                triggeredBy cause: 'UserIdCause' && currentBuild.getBuildCauses('hudson.model.Causes$UpstreamCause').isEmpty()
+                expression {
+                    triggeredBy cause: 'UserIdCause' && !currentBuild.getBuildCauses('hudson.model.Causes$UpstreamCause').isEmpty()
+                }
             }
 
             steps{
