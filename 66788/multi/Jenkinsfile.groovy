@@ -368,6 +368,9 @@ pipeline {
         }
 
         stage ('DOWNLOAD FILES FROM ARTIFACTORY') {
+            when {
+                expression { params.UPLOAD == true }
+            }
             steps {
                 script {
                     dir("${WORKSPACE}") {
@@ -433,8 +436,7 @@ pipeline {
         stage ('PUBLISH') {
             when {
                 anyOf {
-                    env.jammy == '1'
-                    env.noble == '1'
+                    env.jammy == '1' || env.noble == '1'
                 }
             }
             steps {
