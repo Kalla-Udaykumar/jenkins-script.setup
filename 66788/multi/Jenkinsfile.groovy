@@ -53,7 +53,8 @@ pipeline {
         text(name: 'REMOVE_PACKAGES',
              defaultValue: "",
              description: 'newline delimited package names to be deleted before upload, please include the file type eg. abcd.deb')
-        booleanParam(name: 'UPLOAD', defaultValue: false, description: 'Toggle this value if you wish to not upload artifacts to artifactory')
+        booleanParam(name: 'UPLOAD', defaultValue: true, description: 'Toggle this value if you wish to not upload artifacts to artifactory, This one upload changes to latest artifactory path')
+        booleanParam(name: 'USER_UPLOAD', defaultValue: false, description: 'Toggle this value if you wish to upload to artifactory, This one wont upload to latest folder')
         booleanParam(name: 'USE_COMMIT', defaultValue: false, description: 'Toggle this value if you wish use commit id instead of branch')
         booleanParam(name: 'FORCE_BUILD', defaultValue: false, description: 'Toggle this value if you wish to force build')
         booleanParam(name: 'EMAIL', defaultValue: true, description: 'Email notification upon job completion')
@@ -167,6 +168,7 @@ pipeline {
                                 text(name: "PACKAGE_REPOS", value: "${params.PACKAGE_REPOS}"), \
                                 text(name: "REMOVE_PACKAGES", value: "${params.REMOVE_PACKAGES}"), \
                                 booleanParam(name: 'UPLOAD', value: "${params.UPLOAD}"), \
+                                booleanParam(name: 'USER_UPLOAD', value: "${params.USER_UPLOAD}"), \
                                 booleanParam(name: 'USE_COMMIT', value: "${params.USE_COMMIT}"), \
                                 booleanParam(name: 'FORCE_BUILD', value: "${params.FORCE_BUILD}"), \
                                 string(name: 'UPSTREAM_DATE', value: "${DATETIME}"), \
@@ -195,6 +197,7 @@ pipeline {
                                 text(name: "PACKAGE_REPOS", value: "${params.PACKAGE_REPOS}"), \
                                 text(name: "REMOVE_PACKAGES", value: "${params.REMOVE_PACKAGES}"), \
                                 booleanParam(name: 'UPLOAD', value: "${params.UPLOAD}"), \
+                                booleanParam(name: 'USER_UPLOAD', value: "${params.USER_UPLOAD}"), \
                                 booleanParam(name: 'USE_COMMIT', value: "${params.USE_COMMIT}"), \
                                 booleanParam(name: 'FORCE_BUILD', value: "${params.FORCE_BUILD}"), \
                                 string(name: 'UPSTREAM_DATE', value: "${DATETIME}"), \
