@@ -268,7 +268,7 @@ pipeline {
             }
         }
 
-        stage('Convert Git urls to https') {
+        stage('CONVERT GIT URLS TO HTTPS') {
             steps {
                 script {
                     if(params.JAMMY) {
@@ -293,7 +293,7 @@ pipeline {
             }
         }
 
-        stage ('Check for Jammy Changes') {
+        stage ('CHECK FOR JAMMY CHANGES') {
             when {
                 expression { params.JAMMY == true }
             }
@@ -330,7 +330,7 @@ pipeline {
             }
         }
 
-        stage ('Check for Noble Changes') {
+        stage ('CHECK FOR NOBLE CHANGES') {
             when {
                 expression { params.NOBLE == true }
             }
@@ -367,7 +367,7 @@ pipeline {
             }
         }
 
-        stage ('DOWNLOAD LATEST FILES FOR JAMMY AND NOBLE') {
+        stage ('DOWNLOAD FILES FROM ARTIFACTORY') {
             steps {
                 script {
                     dir("${WORKSPACE}") {
