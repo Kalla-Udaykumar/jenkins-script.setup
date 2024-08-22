@@ -367,7 +367,7 @@ pipeline {
             }
         }
 
-        stage ('DOWNLOAD LATESTFILES') {
+        stage ('DOWNLOAD LATEST FILES') {
             when {
                 expression { params.UPLOAD == true }
             }
