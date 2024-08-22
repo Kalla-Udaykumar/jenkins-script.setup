@@ -96,10 +96,10 @@ pipeline{
         text(name: 'REMOVE_PACKAGES',
              defaultValue: "",
              description: 'newline delimited package names to be deleted before upload, please include the file type eg. abcd.deb')
-        booleanParam(name: 'UPLOAD', defaultValue: false, description: 'Toggle this value if you wish to not upload artifacts to artifactory')
+        booleanParam(name: 'UPLOAD', defaultValue: false, description: 'Toggle this value if you wish to not upload artifacts to artifactory, This one upload changes to latest artifactory path')
         booleanParam(name: 'USE_COMMIT', defaultValue: false, description: 'Toggle this value if you wish use commit id instead of branch')
         booleanParam(name: 'FORCE_BUILD', defaultValue: false, description: 'Toggle this value if you wish to force build')
-        booleanParam(name: 'USER_UPLOAD', defaultValue: false, description: 'Toggle this value if you wish to not upload artifacts to artifactory')
+        booleanParam(name: 'USER_UPLOAD', defaultValue: false, description: 'Toggle this value if you wish to upload to artifactory, This one wont upload to latest folder')
     }
 
     stages{
