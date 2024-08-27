@@ -7,6 +7,8 @@ def Protex_IA_Files() {
 	sh """#!/bin/bash -xe
  	mkdir  -p  "${WORKSPACE}"/Protex_IA/zephyr/drivers/ith/
 	cp -r "${WORKSPACE}"/zephyr/drivers/ith "${WORKSPACE}"/Protex_IA/zephyr/drivers/ith
+ 	mkdir -p  "${WORKSPACE}"/Protex_IA/zephyr/subsys/tracing/ith
+        cp -r "${WORKSPACE}"/zephyr/drivers/ith "${WORKSPACE}"/Protex_IA/zephyr/subsys/tracing/ith
 	"""
     }
 }
