@@ -133,7 +133,7 @@ pipeline {
         stage ('READ CONFIG.JSON FILE') {
             steps {
                 checkout([$class: 'GitSCM',
-                userRemoteConfigs: [[credentialsId: 'GitHub-Token', url: 'https://github.com/intel-innersource/libraries.devops.jenkins.cac.git']],
+                userRemoteConfigs: [[credentialsId: 'GitHub-Token', url: 'https://github.com/Kalla-Udaykumar/jenkins-script.setup.git']],
                 branches: [[name: "master"]],
                 extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'henosis_devops'],
                 [$class: 'ScmName', name: 'henosis_devops'],
