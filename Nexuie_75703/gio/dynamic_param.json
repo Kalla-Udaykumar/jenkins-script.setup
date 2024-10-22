@@ -6,25 +6,13 @@
                 "VALUE": "ifwi_image_path_release"
             }
         ],
-        "100300": [
+        "97938": [
             {
                 "KEY": "payload_url",
                 "VALUE": "payload_path"
             }
         ],
-        "97938": [
-            {
-                "KEY": "ifwi_url",
-                "VALUE": "ifwi_image_path_debug"
-            }
-        ],
         "97941": [
-            {
-                "KEY": "ifwi_url",
-                "VALUE": "ifwi_image_path_debug"
-            }
-        ],
-        "97942": [
             {
                 "KEY": "ifwi_url",
                 "VALUE": "ifwi_image_path_debug"
