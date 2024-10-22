@@ -1,0 +1,8 @@
+{  
+    "dynamic_parameters":{
+        "$bkc_os_url": "OS_IMAGE_PATH_url",
+        "$tool_append": "sbl_release_path",
+        "$sbl_url": "SBL_URL",
+        "$cbkc_bsp_release_tag": "latest_tag"
+  }
+}
