@@ -1,0 +1,171 @@
+#!groovy
+
+def getConfig() {
+    props = readYaml file: "${WORKSPACE}/henosis_devops/NEXUIE-75447/gio/config.yml"
+    gio_cmd = props.gio_cmd
+    profile_id = props.profile_id
+    println(gio_cmd)
+
+    sh"""
+        curl -k -H "Accept: application/json"  "http://gio.intel.com/gio/api/webexec/gio-plugin-profile?id=${profile_id}&response=json" >> ${WORKSPACE}/arlh_sbl_profile.json
+    """
+    props = readYaml file: "${WORKSPACE}/arlh_sbl_profile.json"
+    RELEASE_FILENAME = "${props.general_param.SBL_RELEASE_FILENAME[0]}"
+    SBL_RELEASE = "${props.general_param.SBL_RELEASE[0]}"
+    BSP_RELEASE_GIT_REPO = "${props.general_param.BSP_RELEASE_GIT_REPO[0]}"
+    CBKC_BSP_RELEASE_TAG = "${props.general_param.CBKC_BSP_RELEASE_TAG[0]}"
+
+    //Split the string to get the PREFIX value
+    SBL_RELEASE_PREFIX = SBL_RELEASE.split(' h')
+    println("SBL RELEASE PREFIX: ${SBL_RELEASE_PREFIX}")
+    PRE_FIX = SBL_RELEASE_PREFIX[0]
+    SBL_RELEASE_LIST = SBL_RELEASE.split(' ')
+    ARTIFACTORY_RELEASE_PATH = SBL_RELEASE_LIST[-1]
+    ARTIFACTORY_SERVER_url = ARTIFACTORY_RELEASE_PATH.replace('//', '/')
+    ARTIFACTORY_SERVER_name = ARTIFACTORY_SERVER_url.split('/')
+    ARTIFACTORY_SERVER = ARTIFACTORY_SERVER_name[1]
+    ARTIFACTORY_REPO = ARTIFACTORY_SERVER_name[3]
+
+    //Split the Artifactory URL to get the Repo Path
+    ARTIFACTORY_PATH_LIST = ARTIFACTORY_SERVER_url.split(ARTIFACTORY_REPO+'/')
+    ARTIFACTORY_PATH = ARTIFACTORY_PATH_LIST[1]
+    println("Artifactory server is ${ARTIFACTORY_SERVER}, Repo is : ${ARTIFACTORY_REPO}")
+    println("SBL_RELEASE_PATH path is : ${ARTIFACTORY_PATH}")
+    println("SBL RELEASE Filename: ${RELEASE_FILENAME}")
+    println("SBL RELEASE PREFIX: ${PRE_FIX}")
+
+    //Read tag repo and release_tag keyword
+    TAG_REPO = BSP_RELEASE_GIT_REPO.split('/tags')[0]
+    parts = CBKC_BSP_RELEASE_TAG.split("::")
+    TAG = "'${parts.collect { it.trim() }.join("' '")}'"
+    println("BSP_RELEASE_GIT_REPO is : ${TAG_REPO}")
+    println("CBKC_BSP_RELEASE_TAG is : ${TAG}")
+}
+
+def getBinFile_sbl_release() {
+    String binList_aql = readFile("${WORKSPACE}/henosis_devops/NEXUIE-75447/gio/sbl_release_searchArt.aql").replaceAll('ARTIFACTORY_REPO',"${ARTIFACTORY_REPO}").replaceAll('ARTIFACTORY_RELEASE_PATH',"${ARTIFACTORY_PATH}").replaceAll('RELEASE_FILENAME',"${RELEASE_FILENAME}")
+    writeFile file:"${WORKSPACE}/henosis_devops/NEXUIE-75447/gio/sbl_release_binList.aql", text: binList_aql
+    def read_sbl_release_binList_aql = readFile file: "${WORKSPACE}/henosis_devops/NEXUIE-75447/gio/sbl_release_binList.aql"
+    println read_sbl_release_binList_aql
+
+    dir("${WORKSPACE}/henosis_devops/NEXUIE-75447/gio") {
+        withCredentials([usernamePassword(credentialsId: 'BuildAutomation', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+            sh """ #!/bin/bash -xe
+                curl -u ${USERNAME}:${PASSWORD} -X POST -k https://${ARTIFACTORY_SERVER}/artifactory/api/search/aql -d @sbl_release_binList.aql -H "content-type: text/plain" > ${WORKSPACE}/sbl_release_binList.json
+            """
+        }
+    }
+
+    props = readYaml file: "${WORKSPACE}/sbl_release_binList.json"
+    binFile = props.results.name[0]
+    artifactoryPath = props.results.path[0]
+    artifactoryRepo = props.results.repo[0]
+    sbl_release_binFiles = "${PRE_FIX} https://${ARTIFACTORY_SERVER}/artifactory/${artifactoryRepo}/${artifactoryPath}/${binFile}".replaceAll(" "," ")
+    sbl_release_File = "https://${ARTIFACTORY_SERVER}/artifactory/${artifactoryRepo}/${artifactoryPath}/${binFile}".replaceAll(" "," ")
+    println("sbl_release = ${sbl_release_binFiles}")
+
+}
+def create_dynamicJson(sbl_release_binFiles, sbl_release_File) {
+    sbl_release_path = "${sbl_release_binFiles}"
+    println("sbl_release = ${sbl_release_path}")
+    
+    sbl_url_path = "${sbl_release_File}"
+    println("SBL_URL = ${sbl_release_File}")
+
+    def latest_tag = readFile "${WORKSPACE}/latest_tag.txt"
+    println("latest tag = ${latest_tag}")
+
+    String dynamicParam = readFile("${WORKSPACE}/henosis_devops/NEXUIE-75447/gio/dynamic_param.json").replaceAll('sbl_release_path',"${sbl_release_path}").replaceAll('SBL_URL',"${sbl_url_path}").replaceAll('latest_tag',"${latest_tag}")
+    writeFile file:"${WORKSPACE}/release_gio_validation/dynamic_param.json", text: dynamicParam
+    def dynamicParam_json = readJSON file: "${WORKSPACE}/release_gio_validation/dynamic_param.json"
+    println dynamicParam_json
+}
+
+
+// GIO Test trigger Function
+def trigger_giocmd (gio_cmd) {
+    dynamic_giocmd = "${gio_cmd}".replaceAll('-nowait',"") + " -nowait"
+    
+    sh """ #!/bin/bash -xe
+          docker run --rm -v ${WORKSPACE}:${WORKSPACE} -w ${WORKSPACE}/release_gio_validation \
+          -e LOCAL_USER_ID=`id -u` -e LOCAL_GROUP_ID=`id -g` -e LOCAL_USER="lab_bldmstr" ${DOCKER_IMG} \
+          bash -c "pip install --upgrade gio_plugin --extra-index-url https://af01p-png.devtools.intel.com/artifactory/api/pypi/gio-testing-center-pyrepo-png-local/simple \
+          && gio_plugin ${dynamic_giocmd} "
+            """
+}
+
+def fullGIO(gio_cmd) {
+    getBinFile_sbl_release()
+    create_dynamicJson(sbl_release_binFiles, sbl_release_File)
+    //create_dynamicJson_debug(debug_binFiles)
+    //gio_cmd = gio_cmd.values()[0]
+     trigger_giocmd (gio_cmd)
+}
+
+pipeline {
+    agent {
+      node {
+         label "BSP-DOCKER-POOL"
+        }
+    }
+    environment {
+        DATETIME = new Date().format("yyyyMMdd-HHmm")
+        DOCKER_IMG = "amr-registry.caas.intel.com/esc-apps/gio/ubuntu18.04:20210927_1110"
+    }
+    options {
+       timestamps()
+       buildDiscarder(logRotator(numToKeepStr: '90', artifactDaysToKeepStr: '30'))
+       skipDefaultCheckout()
+    }
+    parameters {
+        booleanParam(name: 'CLEANWS', defaultValue: true, description: 'Clean workspace')
+    }
+    stages {
+        stage ('CLEAN') {
+            when {
+                expression { params.CLEANWS == true }
+            }
+            steps {
+                // Recursively deletes the current directory and its contents.
+                deleteDir()
+                }
+        }
+        stage ('READ CONFIG.JSON FILE') {
+            steps {
+                checkout([$class: 'GitSCM',
+                userRemoteConfigs: [[credentialsId: 'GitHub-Token', url: 'https://github.com/Kalla-Udaykumar/jenkins-script.setup.git']],
+                branches: [[name: "master"]],
+                extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'henosis_devops'],
+                [$class: 'ScmName', name: 'henosis_devops'],
+                [$class: 'CleanBeforeCheckout']]])
+
+                checkout([$class: 'GitSCM',
+                userRemoteConfigs: [[credentialsId: 'GitHub-Token', url: 'https://github.com/intel-innersource/os.linux.ubuntu.iot.utilities.custom-image-creator-config']],
+                branches: [[name: "main"]],
+                extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'tag'],
+                [$class: 'ScmName', name: 'tag'],
+                [$class: 'CleanBeforeCheckout']]])
+            }
+        }
+        stage('GIO triggering') {
+            steps {
+                getConfig()
+                dir('tag') {
+                    script {
+                        echo "TAG is: ${TAG}"
+                        
+                        // Get the latest tag that matches the 'meteor-lake/*', 'ARL-P*', or 'meteorlake-*' patterns
+                        def patterns = TAG.tokenize("' '").collect { it.replaceAll("'", "") }
+                        def latestTag = sh(script: "git tag -l ${patterns.join(' ')} | sort -V | tail -n 1", returnStdout: true).trim()
+                        // Print out the latest tag
+                        echo "Latest tag: ${latestTag}"
+                        // Save the latest tag to a file in the workspace
+                        writeFile file: "${env.WORKSPACE}/latest_tag.txt", text: latestTag
+                        
+                        fullGIO(gio_cmd)
+                    }
+                }
+            }
+        }
+    }
+}
