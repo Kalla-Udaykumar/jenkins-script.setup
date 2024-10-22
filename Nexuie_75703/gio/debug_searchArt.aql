@@ -1,0 +1,11 @@
+items.find({
+  "type" : "file",
+  "$and":[{
+    "repo" : "ARTIFACTORY_REPO" , 
+    "path" : "ARTIFACTORY_PATH" ,
+    
+    "name" : {"$match" : "NEX_ARL_HR1B_A1XX-ODARL_RPSF_SES0_01F7049B_*_BE*_CRB.bin"}
+  }]
+})
+.include("name","repo","path")
+.limit(10)
