@@ -1,2 +1,2 @@
 ---
-gio_cmd: "-resultcc suraj.rajput@intel.com,nithyaraj.j@intel.com,abdul.r.nalband@intel.com -jsonfile dynamic_param.json -requestby nithyaraj.j@intel.com -result_type html -suiteid 14053 -suiterunid 97937,100300,97938,97941,97942 -add_date true -testcyclegroup 1923 -newtestcycle ARL_H_IFWI_DB_Orange -auto_clone true -sourcetestcycle 134001 -uuid 3a84d3fc-4238-45ff-8231-080eb960c4ad"
+gio_cmd: "-resultcc suraj.rajput@intel.com,nithyaraj.j@intel.com,abdul.r.nalband@intel.com -jsonfile dynamic_param.json -requestby nithyaraj.j@intel.com -result_type html -suiteid 14053 -suiterunid 97937,97938,97941,97942 -add_date true -testcyclegroup 1923 -newtestcycle ARL_H_IFWI_DB_Orange -auto_clone true -sourcetestcycle 134001 -uuid 3a84d3fc-4238-45ff-8231-080eb960c4ad"
