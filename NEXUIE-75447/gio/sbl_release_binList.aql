@@ -1,0 +1,10 @@
+items.find({
+  "type" : "file",
+  "$and":[{
+    "repo" : "PED-Bootloader-and-FSP-local" , 
+    "path" : {"$match": "SBL_BKC/ARLH/SBL_ARLH_*"} ,
+    "name" : {"$match" : "full_validation.zip"}
+  }]
+})
+.sort({"$desc": ["modified"]})
+.limit(10)
