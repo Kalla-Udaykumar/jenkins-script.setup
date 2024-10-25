@@ -1,0 +1,10 @@
+items.find({
+  "type" : "file",
+  "$and":[{
+    "repo" : "ARTIFACTORY_IMAGE_REPO", 
+    "path" : {"$match": "OS_IMAGE_PATH*"},
+    "name" : {"$match" : "*.img.bz2"}
+  }]
+})
+.sort({"$desc": ["modified"]})
+.limit(10)
